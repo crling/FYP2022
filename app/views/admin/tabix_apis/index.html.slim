@@ -1,0 +1,47 @@
+- content_for :title
+  | Admin::TabixApis
+
+.container
+  ol.breadcrumb
+    li.breadcrumb-item
+      = link_to 'Tabix Apis', admin_tabix_apis_path
+  .card
+    .card-body
+      h2.card-title Tabix Apis
+      p.text-muted
+        | GET&nbsp;
+        code = "/api/tabix/:name"
+        | &nbsp;with the following parameters
+      ul.text-muted
+        li
+          code name
+          | &nbsp;File alias
+        li
+          code seg
+          | &nbsp;Chromosome name
+        li
+          code from
+          | &nbsp;Start position
+        li
+          code to
+          | &nbsp;End position
+      .btn-toolbar.justify-content-end.mb-3 role="toolbar"
+        .btn-group.mr-3 role="group"
+          = link_to new_admin_tabix_api_path, class: 'btn btn-secondary' do
+            = icon 'fas', 'plus'
+            | Add Tabix Api
+    ul.list-group.list-group-flush
+      - @apis.each do |a|
+        li.list-group-item.d-flex.justify-content-between data-id="#{a.id}"
+          div
+            span = a.id
+            span.ml-2 = a.url_name
+            span.text-muted.ml-2 = a.folder
+          div
+            .btn-group.mr-2
+              = link_to edit_admin_tabix_api_path(a), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'edit'
+                | Edit
+            = link_to admin_tabix_api_path(a), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure?"} do
+              = icon 'fas', 'trash'
+              | Delete

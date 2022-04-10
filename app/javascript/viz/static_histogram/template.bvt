@@ -1,0 +1,50 @@
+svg {
+	width = auto
+	height = 600
+	XYPlot {
+		height = 500; width = 100%; padding = 90
+		data = data
+		flip = true
+		invertValueAxis = true
+		discreteCategory = true
+		valueRange = valueRange
+		Rect{
+			width = 100%
+			height = 100%
+			stroke = "#000"
+			fill = "none"
+		}
+		Bars {
+			@expr console.log(data)
+			Rect.full {
+				fill = color
+			}
+		}
+		Text{
+			x = 50%; y = @geo(100,20)
+			anchor = @anchor("middle","center")
+			text = xlabel
+			fill = "#000"
+			fontSize = 14
+		}
+		Text{
+			x = 50%; y = -20
+			anchor = @anchor("middle","center")
+			text = title
+			fill = "#000"
+			fontSize = 17
+		}
+		Component{
+			x = -50; y = 50%
+			rotation = @rotate(-90)
+			Text{
+				text = ylabel
+				fill = "#000"
+				anchor = @anchor("middle","center")
+				fontSize = 14
+			}
+		}
+		Axis("bottom") { y = 100% }
+		Axis("left");
+	}
+}

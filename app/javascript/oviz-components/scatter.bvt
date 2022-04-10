@@ -1,0 +1,43 @@
+GridPlot {
+    static = true
+    @props prop
+    :background {
+        Rect.full {
+            fill = "none"; strokeWidth = 1; stroke = "black"
+        }
+        @if markedScatter {                
+            Line {
+                @props markedLines[0]
+                y2 = 100%; x = @scaled-x(markedLines[0].x)
+            }
+            Line {
+                @props markedLines[1]
+                x2 = 100%; y = @scaled-y(markedLines[1].y)                    
+            }
+        }
+    }
+    :content(scatterData) {
+        Dots {
+            :children(d) {
+                @if (d.data.show) {
+                Component {
+                    key = d.data.sampleId // this part is hard-coded
+                    cursor = "pointer"
+                    @let shape = prop.shapeGetter(d.data)
+                    Component(shape) {
+                        r = prop.scatterSize / 2; height = prop.scatterSize; width = prop.scatterSize;
+                        anchor = @anchor("c", "m"); fill = prop.hollow ? "#fff" : prop.colorGetter(d.data)
+                        stroke = prop.hollow ? prop.colorGetter(d.data) : "none" 
+                        strokeWidth = prop.hollow ? 2 : 0
+                        behavior:tooltip {
+                            content = prop.generateTooltip(d.data)
+                        }
+                    }
+                    on:click = markScatter(d)
+                    on:dblclick = hideScatter(d)
+                }
+                }
+            }
+        }
+    }
+}

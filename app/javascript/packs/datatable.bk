@@ -1,0 +1,85 @@
+$(window).unload(function() {
+    $.rails.enableFormElements($($.rails.formSubmitSelector));
+  });
+
+  $.fn.dataTable.ext.errMode = 'throw';
+
+$(function () { 
+    var table = $("table[role='datatable']").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: $(this).data('url'),
+        columnDefs: [{
+        targets: [0, -1],
+        orderable: false,
+        className: 'select-checkbox',
+        targets:   0
+      }],
+      select: {
+        style:    'multi',
+        selector: 'td:first-child'
+        },
+      scrollX: true
+    }); 
+
+    $(".selectAll").on( "click", function(e) {
+        if ($(this).is( ":checked" )) {
+            table.rows(  ).select();        
+        } else {
+            table.rows(  ).deselect(); 
+        }
+    });
+
+    $(".select-checkbox").on( "click", function(e) {
+        var rows_selected = table.rows( { selected: true } ).data();//.column(0).data();
+        var selected_ids = rows_selected.map(function(value,index) { return value[0]; });
+        console.log(selected_ids);
+    });
+
+    $('.s_table_sub').on("click", function(e){
+        var form = this;
+  
+        var rows_selected = table.rows( { selected: true } ).data();//.column(0).data();
+        var selected_ids = rows_selected.map(function(value,index) { return parseInt(value[0]); });
+  
+        // Iterate over all selected checkboxes
+        $.each(selected_ids, function(index, rowId){
+           // Create a hidden element
+           $(form).append(
+                $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'sample_ids[]')
+                .val(rowId)
+            );
+        });
+        console.log("submitting");
+    });
+
+    $('button.toggle-vis').on( 'click', function (e) {
+      e.preventDefault();
+      $(this).toggleClass('clicked');
+      // Get the column API object
+      var column = table.column( $(this).attr('data-column') );
+      // Toggle the visibility
+      column.visible( ! column.visible() );
+    } );
+
+
+
+    var table = $("table[role='datatable']").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: $(this).data('url'),
+        columnDefs: [{
+        targets: [0, -1],
+        orderable: false,
+        className: 'select-checkbox',
+        targets:   0
+    }],
+    select: {
+        style:    'multi',
+        selector: 'td:first-child'
+        },
+    scrollX: true
+    }); 
+} );

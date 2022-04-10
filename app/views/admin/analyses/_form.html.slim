@@ -1,0 +1,33 @@
+/ - host = Rails.configuration.action_mailer.default_url_options[:host]
+- unless @analysis.id.nil?
+  = f.association :analysis_category
+= f.input :name
+= f.input :url, hint: "This name will be embeded in URLs. Hence it must be URL-safe."
+= f.association :visualizer
+= f.input :mid
+= f.input :hidden
+hr
+= f.input :files_info, as: :text, input_html: {value: f.object.files_info_json, data: {'ace': true, 'ace-mode': 'json'}}
+= f.input :documentation
+= f.input :about
+= f.input :references
+hr
+= f.error_notification
+= f.input :image_file, as: :file
+- if !@analysis.cover_image.nil?
+  img src = @analysis.cover_image width="400"
+hr
+= f.button :submit
+
+- content_for :page_script do
+  sass:
+    textarea.form-control
+      height: 200px
+
+- content_for :page_script do
+  =javascript_pack_tag 'admin-form'
+  sass:
+    .ace_editor
+      height: 200px
+      border: 1px solid #ced4da
+      border-radius: 0.25rem

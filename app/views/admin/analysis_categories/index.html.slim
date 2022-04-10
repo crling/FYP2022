@@ -1,0 +1,33 @@
+- content_for :title
+  | Admin::Analyses
+
+.container
+  =render 'partials/admin_navbar'
+  .card
+    .card-body
+      h2.card-title Analysis Categories
+      .btn-toolbar.justify-content-end.mb-3 role="toolbar"
+        .btn-group.mr-3 role="group"
+          = link_to new_admin_analysis_category_path, class: 'btn btn-secondary' do
+            = icon 'fas', 'plus'
+            | Add Category
+    ul.sortable-list.list-group.list-group-flush data-update-path="#{admin_update_analysis_category_position_path}"
+      - @analysis_categories.each do |c|
+        li.list-group-item.justify-content-between.d-flex data-id="#{c.id}"
+          div
+            = icon 'fa', 'bars', class: 'drag-handle'
+            = c.name
+            span.text-muted.ml-2 = "#{c.analyses.count} " + "analyses".pluralize
+          div
+            .btn-group.mr-2
+              = link_to new_admin_analysis_category_analysis_path(c), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'plus'
+                | Add Analysis
+              = link_to edit_admin_analysis_category_path(c), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'edit'
+                | Edit
+            = link_to admin_analysis_category_path(c), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure?"} do
+              = icon 'fas', 'trash'
+              | Delete
+- content_for :page_script do
+  =javascript_pack_tag 'admin-form'

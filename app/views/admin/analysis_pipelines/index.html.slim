@@ -1,0 +1,28 @@
+- content_for :title
+  | Admin::Pipeline
+
+.container
+  =render 'partials/admin_navbar'
+  .card
+    .card-body
+      h2.card-title Pipelines
+      .btn-toolbar.justify-content-end.mb-3 role="toolbar"
+        .btn-group.mr-3 role="group"
+          = link_to new_admin_analysis_pipeline_path, class: 'btn btn-secondary' do
+            = icon 'fas', 'plus'
+            | Add Pipeline
+    ul.sortable-list.list-group.list-group-flush
+      - @pipelines.each do |pl|
+        li.list-group-item.justify-content-between.d-flex data-id="#{pl.id}"
+          div
+            = icon 'fa', 'bars'
+            = pl.name
+            /span.text-muted.ml-2 = "#{v.viz_data_sources.count} data sources: (#{v.viz_data_sources_string} )"
+          div
+            .btn-group.mr-2
+              = link_to edit_admin_analysis_pipeline_path(pl), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'edit'
+                | Edit
+            = link_to admin_analysis_pipeline_path(pl), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure?"} do
+              = icon 'fas', 'trash'
+              | Delete

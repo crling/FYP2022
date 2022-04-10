@@ -1,0 +1,21 @@
+<p>
+    <strong>Sample:</strong>
+    <%= sample.sample_name %>
+</p>
+ 
+<p>
+    <strong>Project:</strong>
+    <%= sample.project_name %>
+</p>
+
+<p>
+    <strong>Age:</strong>
+    <%= sample.host_age %>
+</p>
+  
+<p>
+    <%= link_to 'Edit', edit_project_sample_path(sample.project, sample.id) %> 
+    <%= link_to 'Delete', [sample.project, sample],
+    method: :delete,
+    data: { confirm: 'Are you sure to delete ' + sample.sample_name + '?'} %>
+</p>

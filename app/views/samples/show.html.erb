@@ -1,0 +1,53 @@
+<% content_for :title, 'Sample ' + @sample.sample_name %>
+<div class="container">
+    
+    <div class="Block">
+        <div class="row">
+            <% @attrs.each do |attr| %>
+                <% if attr != 'id' && attr != 'created_at' && attr != 'updated_at' && @sample[attr]%>
+                <div class="col-md-6">
+                    <strong><%=attr%>: </strong>
+                    <% if attr == 'project_name' %>
+                        <%= link_to @sample[attr], @project %>
+                    <% else %>
+                        <%= @sample[attr] %>
+                    <% end %>
+                </div>
+                <% end %>
+            <% end %>
+        </div>        
+    </div>
+    
+    <%#= form_tag upload_seq_project_sample_path, :multipart =>true do %>   
+        <%#= file_field_tag :seq_file %>
+        <%#= submit_tag "upload fasta file" %>
+    <%# end %> 
+
+    <%#= form_tag upload_abd_project_sample_path, :multipart =>true do %>
+        <%#= file_field_tag :abd_file %>
+        <%#= submit_tag "upload abundance file" %>
+    <%# end %> 
+
+    
+
+    
+
+    
+    <%if @abd_exist %>
+        <p>
+            <%#= link_to 'Download sequencing data', download_seq_project_sample_path %>
+            <%= link_to 'Download abundance data', download_abd_project_sample_path %><br/>
+            <%#= link_to 'Edit', edit_project_sample_path(@sample.project, @sample.id) %> 
+            <%#= link_to 'Delete', [@sample.project, @sample],
+            method: :delete,
+            data: { confirm: 'Are you sure to delete ' + @sample.sample_name + '?'} %>
+        </p>
+        <div id="viz_sample_abd" class="col">
+        </div>
+        <%= javascript_pack_tag "sample_abd" %>
+    <% else %>
+        <p> *Abundance data does NOT exist for this sample. </p>
+    <%end%>
+    
+</div>
+    

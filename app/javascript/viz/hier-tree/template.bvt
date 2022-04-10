@@ -1,0 +1,79 @@
+svg {
+	height = 600
+	Component {
+		x = 50; y = 50
+		Rows {
+			Legend {
+				padding = 8
+				title = "Cluster"
+				data = clusterLegendData
+			}
+			Legend {
+				padding = 8
+				y = 10
+				title = "Group"
+				data = groupLegendData
+			}
+		}
+		Tree {
+			width = treeWidth
+			height = 500
+			r = 400
+			data = hierTreeData
+			direction = "bottom"
+			:node(n){
+				Component{
+					Circle.centered{
+						r =  2
+						fill = "#999"
+					}
+				}
+			}
+			:link(l){
+				Component {
+					Path {
+						@let clusterColor = !!l.link.source.data.cluster ? colorMap[l.link.source.data.cluster] : "#000"
+						stroke = clusterColor
+						strokeWidth = 2
+						fill = "none"
+						d = l.tree.getPath(...l.pos)
+					}
+				}
+			}
+			:leaf(f) {
+				Container {
+					// @expr console.log(f.tree)
+					anchor = f.tree.leafAnchor(f.leaf)
+					padding = 2
+					Rows {
+						y = -6
+						Component {
+							width = 12
+							// @let groupFill = groupDict[f.leaf.data.name] ? groupColorMap[groupDict[f.leaf.data.name]] : colors.naColor
+							@if groupColorMap[groupDict[f.leaf.data.name]] {
+								Rect {
+									fill = groupColorMap[groupDict[f.leaf.data.name]]
+									height = 10; width = 10
+								}
+							} @else {
+								Rect {
+									height = 10; width = 10; fill = colors.naColor
+								}
+								Line {
+									x2 = 10; y2 = 10; stroke = "red"
+								}
+							}
+							Component {
+								width = 100
+								Text {
+									x = 10
+									text = f.leaf.data.name
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

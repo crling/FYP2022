@@ -1,0 +1,17 @@
+ol.breadcrumb
+  li.breadcrumb-item
+    - if user_signed_in?
+      - if current_user.has_role? :developer
+        = link_to 'Home', user_home_path, class: 'text-light'
+      - elsif current_user.has_role? :researcher
+        = link_to 'Home', user_projects_path, class: 'text-light'
+      - else
+        = link_to 'Home', user_data_path, class: 'text-light'
+    - else
+      = link_to 'Home', root_path, class: 'text-light'
+  - path.each do |item|
+    li.breadcrumb-item class=('active' if item == path.last)
+      - if item[1]
+        = link_to item[0], item[1], class: 'text-light'
+      - else
+        = item[0]

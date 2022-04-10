@@ -1,0 +1,7 @@
+<% content_for :title, 'Edit dataset' %>
+<div class="container">
+    <h1>Edit Dataset</h1>
+    
+    <%= render 'datasets/form' %>
+    <%= link_to 'Back', user_dataset_path(@dataset.user, @dataset) %>
+</div>

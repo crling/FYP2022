@@ -1,0 +1,30 @@
+- content_for :title
+  | Admin::Public FileApis
+
+.container
+  ol.breadcrumb
+    li.breadcrumb-item
+      = link_to 'Public File Apis', admin_public_file_apis_path
+  .card
+    .card-body
+      h2.card-title Public File Apis
+      .btn-toolbar.justify-content-end.mb-3 role="toolbar"
+        .btn-group.mr-3 role="group"
+          = link_to new_admin_public_file_api_path, class: 'btn btn-secondary' do
+            = icon 'fas', 'plus'
+            | Add Public File Api
+    ul.list-group.list-group-flush
+      - @apis.each do |a|
+        li.list-group-item.d-flex.justify-content-between data-id="#{a.id}"
+          div
+            span = a.id
+            span.ml-2 = a.url_name
+            span.text-muted.ml-2 = a.path
+          div
+            .btn-group.mr-2
+              = link_to edit_admin_public_file_api_path(a), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'edit'
+                | Edit
+            = link_to admin_public_file_api_path(a), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure?"} do
+              = icon 'fas', 'trash'
+              | Delete

@@ -1,0 +1,88 @@
+@import "partials/variables"
+
+
+body.database, body.pipelines, body.public_references, body.toolkits, body.welcome, body.submit
+    .index-banner
+        color: $gray-900
+        // background: asset-url("texture-1.jpg")
+        // background-size: cover
+        padding: 2rem 0
+        &.sm
+            padding: 3rem 0
+        .lead
+            width: 75%
+    #app-list, #pipeline-list, #database-tc, #database-fc, #database-aa
+        padding: 2rem 0
+
+body.public_references, body.toolkits
+    section
+        min-height: 700px
+
+    #file-preview pre
+        height: 700px
+        overflow: auto
+
+body.database, body.pipelines
+    #alert-center
+        z-index: 1000
+    .edit-app-nav-item
+        color: $secondary
+        padding: .5rem 0
+        border-bottom: 3px solid $gray-300
+        cursor: pointer
+        &.active, &:hover
+            border-bottom-color: $gray-800
+            color: $gray-900
+    .edit-app-section, .set-input-section, .set-param-section, .test-history-section, 
+    .publish-app-section, .publish-history-section, .preview section
+        padding: 1rem
+        background: $gray-100
+        margin: 0 0 1rem 0
+        border-radius: 4px
+    .upload-source-section, .edit-online-section
+        padding: 20px 40px
+        min-height: 350px
+        border: 1px solid #e0eded
+        img
+            width: 80px
+            height: 80px
+            margin: 20px 0 10px 0
+        h4
+            margin: 20px 0
+        p
+            height: 70px
+        button
+            border-color: #343a40
+    .edit-online-section
+        background: #ecf0f1
+body.pipelines, body.projects
+    #alert-center
+        z-index: 1000
+    #pipeline-flowchart
+        border-radius: 4px
+        overflow: hidden
+body.database
+    #cmd pre
+        display: block
+        padding: 9.5px
+        margin: 0 0 10px
+        font-size: 13px
+        line-height: 1.42857143
+        color: #333
+        word-break: break-all
+        word-wrap: break-word
+        background-color: #f5f5f5
+        border: 1px solid #ccc
+        border-radius: 4px
+
+#analyses_list, #pipeline_list
+    .card
+        transition: all 0.3s
+        border: 1px solid $gray-400
+        box-shadow: 0 0 16px darken($gray-300, 5%)
+        &:hover
+            box-shadow: 0 0 32px darken($gray-400, 5%)
+        .btn
+            border-radius: 2rem
+        h5
+            color: $gray-700

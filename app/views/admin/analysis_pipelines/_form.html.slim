@@ -1,0 +1,38 @@
+= f.input :name
+= f.input :url, hint: "This name will be embeded in URLs. Hence it must be URL-safe."
+= f.input :pid
+= f.input :image_file, as: :file
+- if !@pipeline.cover_image.nil?
+  img src = @pipeline.cover_image width="400"
+hr
+- modules = Analysis.where("mid is not null").map { |m| [m.name, m.id] }
+.form-group.row
+  - prefix = 'analysis_pipeline[module_requirements_attributes]'
+  label.col-sm-2.col-form-label Analysis modules
+  .col-sm-10
+    .form-opt-container
+      - f.object.module_requirements.each_with_index do |md, index|
+        .input-group.mb-1
+          - mr = "#{prefix}[#{index}]"
+          = hidden_field_tag "#{mr}[id]", md.id
+          = select_tag "#{mr}[analysis_id]", options_for_select(modules, md.analysis_id), class: 'form-control'
+          .input-group-append
+            span.input-group-text
+              = check_box_tag "#{mr}[_destroy]"
+              = label_tag "#{mr}[_destroy]", "Remove", class: 'mb-0 ml-2'
+    button.float-right.btn.btn-secondary.btn-add-opt type="button"
+      = icon 'fas', 'plus'
+      | Add
+    template
+      .input-group.mb-1.fresh
+        = select_tag "#{prefix}[_id_][analysis_id]", options_for_select(modules), class: 'form-control'
+        .input-group-append
+          .btn.btn-secondary.btn-rm-opt
+            = icon 'fas', 'minus'
+            | Remove
+hr
+= f.button :submit
+
+- content_for :page_script do
+  =javascript_pack_tag 'admin-form'
+    

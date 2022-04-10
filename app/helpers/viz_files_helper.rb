@@ -1,0 +1,2 @@
+module VizFilesHelper
+end

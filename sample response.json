@@ -1,0 +1,39 @@
+{
+   "code":true,
+   "data":[
+      {
+         "vid":2,
+         "id":2,
+         "name":"Pathway Enrichment",
+         "desc":null,
+         "chart_name":"SignedHeatmap",
+         "files":{
+            "heatmapData":{
+               "path":"/Pathway_enrichment/species_ko.cor.xls"
+            },
+            "groupData":{
+               "path":"/Pathway_enrichment/species.anno.xls"
+            },
+            "rowTreeData":{
+               "path":"/Pathway_enrichment/exported_tree.newick"
+            }
+         }
+      },
+      {
+         "vid":1,
+         "id":1,
+         "name":"Drug Use",
+         "desc":null,
+         "chart_name":"DiscreteHeatmap",
+         "files":{
+            "heatmapData":{
+               "path":[
+                  "/drug_used/T1_sample.xls",
+                  "/drug_used/T2_sample.xls",
+                  "/drug_used/T3_sample.xls"
+               ]
+            }
+         }
+      }
+   ]
+}

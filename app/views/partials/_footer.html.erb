@@ -1,0 +1,59 @@
+<footer class="footer page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="row">
+                    <a id="sidebarCollapse" class="navbar-brand mt-4" href="https://gutmeta.deepomics.org/" style="color: #fff">
+                        <%
+=begin%>
+                        <img alt="DOAP" class="mr-2 float-left" src="/favicon-w.png">
+                        <%
+=end%>
+                        <span class="font-weight-bold">Metagenomics</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <h4>Database</h4>
+                <ul>
+                    <li><a href='/database/overview/'>Database Information</a></li>
+                    <li><%=link_to 'Projects Detail', projects_path%></li>
+                    <li><%=link_to 'Samples Detail', samples_path%></li>
+                </ul>
+            </div>
+
+            <div class="col-md-2">
+                <h4>Submit</h4>
+                <ul>
+                    <li><a href="/submit/analyses">Analyses</li>
+                    <li><a href="/submit/pipelines">Pipelines</li>
+                    <li><a href='/submit/job-query/'>Job Query</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <h4>Visualization</h4>
+                <ul>
+                    <li><a href="/visualizer">Analyses</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-2">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href='/docs'>Tutorial</a></li>
+                    <li><a href='/contact'>Contact Us</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-lg-9 copyright">
+                <%= Date.today.year %> © City University of Hong Kong. All rights reserved.
+                <a href="#">Terms and conditions</a>
+            </div>
+        </div>
+    </div>
+</footer>

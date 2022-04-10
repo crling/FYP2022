@@ -1,0 +1,132 @@
+svg {
+    height = 1200
+    width = 1000
+    
+    Columns{
+        x = 50; y = 50
+        @if rowTreeData {
+            
+            BinaryTree {
+                width = config.rowTree.treeHeight
+                y = config.gridH / 2 + (colTreeData ? config.colTree.treeHeight : 0)
+                treeNode = rowTreeData
+                gravity = config.rowTree.gravity
+                depthUnit = config.rowTree.depthUnit
+                posUnit = config.gridH
+                parentsPos = 0
+                parentsDep = 0
+            }
+        }
+
+        @if groupData {
+            Rows{
+                width = 70
+                y = colTreeData ? config.colTree.treeHeight : 0
+                @for s in groupData {
+                    Component {
+                        height = 15
+                        Rect {
+                            width = 30; height = 15
+                            fill = s.Enrichemnt === "Control" ? colors.group1 : colors.group2
+                            behavior:tooltip {
+                                    content = `Species: ${s.Species}</br>Enrichment: ${s.Enrichemnt}`
+                            }  
+                        }
+                        Rect {
+                            width = 30; height = 15; x = 35
+                            fill = (s.Genus === "Unknown" ? familyColorMap[s.Phylum][`Other ${s.Phylum}`]
+                                : familyColorMap[s.Phylum][s.Genus])
+                            behavior:tooltip {
+                                    content = `Species: ${s.Species}</br>Phylum: ${s.Phylum}</br> Genus: ${s.Genus}`
+                            }    
+                        }
+                    }
+                }
+                Component {
+                    Text {
+                        text = "Enrichment "
+                        x = 15
+                        anchor = @anchor("r","m")
+                        rotation = @rotate(-90)
+                    }
+
+                    Text {
+                        text = "Family "
+                        x = 50
+                        anchor = @anchor("r","m")
+                        rotation = @rotate(-90)
+                    }
+                }
+            }
+        }
+        
+        Rows {
+            @if colTreeData {
+                BinaryTree {
+                    x = 15
+                    height = config.colTree.treeHeight
+                    treeNode = colTreeData
+                    gravity = config.colTree.gravity
+                    depthUnit = config.colTree.depthUnit
+                    posUnit = 30
+                    parentsPos = 0
+                    parentsDep = 0
+                }
+                
+            }
+            SignedHeatMap {
+                data = heatmapData.data
+                gridW = 30
+                gridH = config.gridH
+                columns = heatmapData.columns
+                rows = heatmapData.rows
+                startColor = colors.origin
+                positiveEndColor = colors["positive range"]
+                negativeEndColor = colors["negative range"]
+                
+                dataRange = [config.rangeMin, config.rangeMax]
+                symRange = config.isSym
+                showPAnno = config.showPAnno
+                
+                :groupLegend {
+                    @if groupData {
+                        Rows { // legend area
+                            width = 150
+                            Component {
+                                height = 20
+                                Text {
+                                    text = "Taxa"
+                                }
+                            }
+                            @for p in Object.keys(phylums) {
+                                Rows {
+                                    Component {
+                                        height = 20
+                                        Text {
+                                            y = 5
+                                            text = p
+                                        }
+                                    }
+                                    @for g in phylums[p] {
+                                        Component {
+                                            height = 10
+                                            Rect {
+                                                width = 20; height = 10
+                                                fill = familyColorMap[p][g]
+                                            }
+                                            Text {
+                                                x = 22
+                                                text = g
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,185 @@
+// Place all the styles related to the Analysis controller here.
+// They will automatically be included in application.css.
+// You can use Sass here: https://sass-lang.com/
+
+@import 'partials/variables'
+=fa
+    font-family: 'Font Awesome 5 Free'
+    font-weight: 900
+    -webkit-font-smoothing: antialiased
+    display: inline-block
+    font-style: normal
+    font-variant: normal
+    text-rendering: auto
+    line-height: 1
+
+$grid-height: 800px
+$sidebar-width: 250px
+.analysis #wrapper
+    display: flex
+    height: calc(100vh - 70px) // 100 viewport height - navbar height
+
+.analysis #main
+    overflow-y: scroll
+    overflow-x: hidden
+    width: 100vw
+
+$sidebar-background-color: desaturate(lighten($orange, 45%), 80%)
+#sidebar
+    background: $white
+    min-width: 250px
+    max-width: 250px
+    // max-height: 1000px
+    margin-left: -250px
+    margin-top: 1px
+    position: relative
+    overflow: hidden
+    margin-left: 0
+    &.active
+        margin-left: 0
+        & + #main
+            max-width: calc(100% - 250px)
+    &.has-toolbar
+        .sidebar-content
+            bottom: 3rem
+    &.has-header
+        .sidebar-content
+            top: 2.5rem
+    .sidebar-content
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        overflow: auto
+        border-top: 1px solid $gray-300
+        border-right: 1px solid $gray-300
+        ul
+            margin: 0
+            border-bottom: 1px solid $gray-300
+            li
+                &.header
+                    line-height: 30px
+                    // background: $gray-300
+                    font-size: 0.9em
+                    padding-left: 1em
+                    color: $gray-600, 10%
+                    border-bottom: 1px solid $gray-300
+                &:not(.header)
+                    line-height: 48px
+                    a
+                        color: $gray-600
+                        border-left: 2px solid transparent
+                        padding-left: 2em
+                        display: block
+                        &:hover
+                            text-decoration: none
+                            background: lighten($gray-600, 30%)
+                &.active a
+                    color: $white
+                    background: darken($gray-600, 5%)
+                    border-left-color: $theme
+                &.fold
+                    cursor: pointer
+                    &:before
+                        +fa
+                        content: "\f0d7"
+                        margin-right: 0.5em
+                    &:hover
+                        background: $gray-100
+    .sidebar-header
+        // position: absolute
+        // height: 2.5em
+        // top: 0
+        // left: 0
+        // right: 0
+        // border: 1px solid $gray-400
+        // p
+        //     text-indent: 3em
+        //     padding-top: 5px
+        //     font-weight: bold
+        // ul
+        //     margin: 0
+        // li
+        //     background: $theme
+        //     a
+        //         padding: 0.75rem 1.25rem
+        //         display: block
+        //         color: $white
+        //         &:hover
+        //             text-decoration: none
+
+#analysis-memo
+    margin: 1px 1px 1px 0
+    padding: 1.5rem 0 1rem 0
+    // background: $gray-100
+    border-radius: 2px
+    h1, h2
+        color: #6d2c4a
+        // width: 100%
+        // border-bottom: 1px solid #9e5274
+        &:not(:first-child)
+            margin: 2rem 0 1rem 0
+    h3, h4, h5, h6
+        color: #6d2c4a
+        margin: 1rem 0
+    strong
+        color: #6d2c4a
+    pre
+        background: rgba(0,0,0,.1)
+        margin: 15px 0
+        padding: 15px
+        border-radius: 4px
+        code
+            background: none
+            margin: 0
+            padding: 0
+            border-radius: 0
+    code
+        color: #ff52a3
+        margin: 0 1px
+        background: rgba(0,0,0,.1)
+        padding: 2px 3px
+        border-radius: 2px
+    table
+        max-width: calc(100% - 20px)
+        margin: 15px 20px
+        th, td
+            border: 1px solid rgba(0,0,0,.2)
+            padding: 0 1em
+    li::marker
+        color: #920547
+        font-size: 1.2em
+    li p
+        margin-bottom: 0
+    .nav-tabs
+        border-bottom-color: $gray-700
+    .nav-link
+        color: $gray-600
+        &.active
+            border-color: transparent
+            color: $white
+            background: darken($gray-600, 5%)
+            text-shadow: 0 0 1px #222
+        &:not(.active):hover
+            // border-color: transparent
+            border-bottom: 1px solid $theme
+            text-decoration: none
+            background: lighten($gray-600, 30%)
+    .tab-content
+    .tab-pane
+
+// css for index
+.card_img
+    width: 100%
+    max-width: 100%
+    img 
+        width: 100%
+        max-width: 100%
+
+.card_body
+    text-align: center
+    padding: 1em
+
+.module_card
+    margein: 1em

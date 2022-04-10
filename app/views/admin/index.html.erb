@@ -1,0 +1,176 @@
+<% content_for:head do%>
+  
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  <%= javascript_pack_tag "table_style" %>
+  
+<%end%>
+
+<% content_for :title, "Admin" %>
+
+<div class="container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <%=link_to 'Admin home', '/admin' %>
+    </li> 
+    <li class="breadcrumb-item">
+      <%=link_to 'Projects', '#project_admin' %>
+    </li> 
+    <li class="breadcrumb-item">
+      <%=link_to 'Samples', '#sample_admin' %>
+    </li> 
+    <li class="breadcrumb-item">
+      <%=link_to 'Analysis Categories', admin_analysis_categories_path %>
+    </li> 
+    <li class="breadcrumb-item">
+      <%=link_to 'Analyses', admin_analyses_path %>
+    </li> 
+    
+  </ol>
+
+
+  <h1>
+  Admin page
+  </h1>
+
+  <p>
+      This is made for admin to :
+      <ul>
+        <li>add project metadata</li>
+        <li>add sample metadata</li>
+        <li>add sample abandance data</li>
+        <li>add analysis module</li>
+        <li>add visualization module</li>
+      </ul>
+  </p>
+
+  <hr />
+
+
+  <br />
+
+  <section id="project_admin" class="admin_block">
+    <h4>
+    Project management:
+    </h4>
+
+    <div id='hidden_helper'>
+    Hide columns: 
+    <br />
+    <% i=0 %>
+    <% @projects.column_names.each do |attr| %>
+      
+      <button class="toggle-vis" data-column='<%=i.to_s%>'> 
+        <%= attr.capitalize %>
+      </button>
+      <%i += 1%>
+      
+    <%end%>
+  </div>
+
+    <table id="pj_table" class="display">
+      <thead>
+        
+        <% @projects.column_names.each do |attr| %>
+          
+          <th> <%= attr.capitalize %> </th>
+          
+        <% end %>
+        <th>
+          Action
+        </th>
+        
+      </thead>
+
+      <tbody>
+        <% @projects.each do |pj| %>
+        
+          <tr>
+            <% @projects.column_names.each do |attr| %>
+              
+              <td> 
+                <div class="table_cell"> 
+                  <%= pj[attr] %> 
+                </div>
+              </td>
+            
+            <% end %>
+            <td>
+              <%= link_to 'Show', project_path(pj) %>
+              <%= link_to 'Delete', project_path(pj), method: :delete,
+                      data: { confirm: 'Are you sure?' } %>
+
+              <%= link_to 'Edit', edit_project_path(pj) %>
+            </td>
+            
+          </tr>
+        
+        <% end %>
+      </tbody>
+
+    </table>
+
+    <%= link_to  "Add one project", "/projects/new" %>
+
+    <%= form_tag import_projects_path, multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag "Import projects from csv" %>
+    <% end %>
+  </section>
+  <hr />
+  <section id="sample_admin" class="admin_block">
+    <h4>
+    Sample management:
+    </h4>
+    <br />
+    <h5>
+      Import all sample metadata from csv:
+    </h5>
+
+    <%= form_tag({action: :update_all_samples}, multipart: true) do %>
+      <p> 
+        Please select csv file to be imported:
+        <br />
+        (project_name should exist in projects database )
+      </p>
+      <%= file_field_tag 'file' %>
+      <%= submit_tag 'Submit'%>
+    <% end %>
+    <br/>
+    <h5>
+      Delete samples:
+    </h5>
+
+    <%= form_tag({action: :delete_samples}, multipart: true) do %>
+      <p> 
+        Please select csv file to be imported:
+        <br />
+        (samples id in a column)
+      </p>
+      <%= file_field_tag 'file' %>
+      <%= submit_tag 'Submit'%>
+    <% end %>
+    <br />
+
+
+    <h5>
+      Modify the abandance:
+    </h5>
+
+    <%= form_tag({action: :modify_sample_abd}, multipart: true) do %>
+      <p>
+        Please select the project whose samples need to be modified
+      </p>
+      <%= select_tag :project_id, options_from_collection_for_select(@projects, :id, :name, -1) %>
+      <p> 
+        Please select tsv file to be imported:
+      </p>
+      <%= file_field_tag 'file' %>
+      <%= submit_tag 'Submit'%>
+    <% end %>
+  </section>
+  <hr>
+  <br/>
+
+</div>

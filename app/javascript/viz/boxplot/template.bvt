@@ -1,0 +1,10 @@
+svg {
+    height = 700; width = 1000
+    ComplexBoxplot {
+        x = 50; y = 50
+        pData = pDict[rank]
+        colors = colors
+        @props data
+        @props config
+    }
+}

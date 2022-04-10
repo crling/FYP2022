@@ -1,0 +1,63 @@
+<% content_for :head do %>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/3.3.2/js/dataTables.fixedColumns.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.3.2/css/fixedColumns.dataTables.min.css">
+  <%= javascript_pack_tag "datatable" %>
+<% end %>
+
+<% content_for :title, 'Projects' %>
+<div class="container">
+  <h1>Projects Information</h1>
+
+  <p>
+    Download all projects information:
+    <%= link_to "CSV", projects_path(format: "csv") %>
+  </p>
+
+  <div id='hidden_helper'>
+    Click to view hidden columns:
+    <br/> 
+    <br />
+    <% i=2 %>
+    <% @attrs.each do |attr| %>
+      <% if attr != 'id'%>
+        <% if !@vis.include? attr%>
+          <button class="toggle-vis" data-column='<%=i.to_s%>'> 
+            <%= attr%>
+          </button>
+        <% end %>
+        <%i += 1%>
+      <%end%>
+    <%end%>
+  </div>
+  <br/>
+
+  <%= form_tag export_selected_projects_path(format: "csv"), multipart: true do %> 
+    <%= content_tag :table, role: :datatable, class: "display", id: "table_page", data: { url: projects_path(format: :json)} do %>
+      <thead>
+            <th>
+              <input type="checkbox" class="selectAll" name="selectAll" value="all">
+            </th>
+            <% @attrs.each do |attr| %>
+              
+              <th> <%= attr %> </th>
+              
+            <% end %>
+            <th>Action</th>
+      </thead>
+      <tbody>
+      </tbody>
+    <% end %>
+
+    
+    <%= submit_tag "Download selected metadata" , :class => "s_table_sub"%>
+  <% end %>
+
+  <p>
+    *To avoid frenquent download, please refresh the page to enable download again.
+  </p>
+</div>

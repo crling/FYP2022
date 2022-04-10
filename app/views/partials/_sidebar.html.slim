@@ -1,0 +1,55 @@
+.sizebar-container
+  - if current_user.has_role? :developer 
+    .sidebar-section
+      .sidebar-heading
+        span.uncollapsed-only Personal Modules
+        span.collapsed-only
+          = icon 'fas', 'user-circle', class: 'fa-fw'
+      ul
+        li.sidebar-item
+          = link_to user_home_path do
+            = icon 'fas', 'list', class: 'fa-fw'
+            span.sidebar-text Module List
+        / li.sidebar-item
+        /   = link_to user_home_path do
+        /     = icon 'fas', 'cog', class: 'fa-fw'
+        /     span.sidebar-text Settings
+    
+    .sidebar-section
+      .sidebar-heading
+        span.uncollapsed-only Personal Pipelines
+        span.collapsed-only
+          = icon 'fas', 'network-wired', class: 'fa-fw'
+      ul
+        li.sidebar-item
+          = link_to user_pipelines_path do
+            = icon 'fas', 'list', class: 'fa-fw'
+            span.sidebar-text Pipeline List
+  - if current_user.has_role? :researcher
+    .sidebar-section
+      .sidebar-heading
+        span.uncollapsed-only Personal Projects
+        span.collapsed-only
+          = icon 'fas', 'tasks', class: 'fa-fw'
+      ul
+        li.sidebar-item
+          = link_to user_projects_path do
+            = icon 'fas', 'list', class: 'fa-fw'
+            span.sidebar-text Project List
+  .sidebar-section
+    .sidebar-heading
+      span.uncollapsed-only Personal Data
+      span.collapsed-only
+        = icon 'fas', 'database', class: 'fa-fw'
+    ul
+      li.sidebar-item
+        = link_to user_data_path do
+          = icon 'fas', 'desktop', class: 'fa-fw'
+          span.sidebar-text File Explorer
+  .sidebar-section.bottom
+    ul
+      li.sidebar-item
+        = link_to '#', id: 'sidebarCollapse' do
+          = icon 'fas', 'angle-double-left', class: 'fa-fw uncollapsed-only'
+          = icon 'fas', 'angle-double-right', class: 'fa-fw collapsed-only'
+          span.sidebar-text Collapse

@@ -1,0 +1,162 @@
+svg {
+	width = 1500; height = 1000
+Component {
+	Rows {
+		y = 40
+		XYPlot {
+			height = 150
+			categories = pData.categories
+			width = config.plotWidth
+			valueRange = [0, 0.1]
+			padding-l = 40
+			data = {
+				pData: pData.pData,
+			}
+			Line {
+				y = @scaled-y(0.1); x2 = 100%; dashArray = "1, 2"
+			}
+			Line {
+				y = @scaled-y(0.05); x2 = 100%; dashArray = "1, 2"
+			}
+			Line {
+				y = @scaled-y(0.01); x2 = 100%; dashArray = "1, 2"
+			}
+			Rect{
+				width = 100%
+				height = 100%
+				stroke = "#000"
+				fill = "none"
+			}
+			AxisBackground {
+				orientation = "vertical"
+				includeEndTicks = true
+				dashArray = "1, 2"
+			}
+			Dots {			
+				data = "pData"
+				dots.fill = "orange"
+				dots.r = 2
+			}
+			
+			Axis("left");
+			Component {
+				x = -25; y = 50%
+				rotation = @rotate(-90)
+				Text("p-value") { anchor = @anchor("bottom", "center") }
+			}
+		}
+		XYPlot {
+			height = 400
+			width = config.plotWidth
+			valueRange = boxData.valueRange
+			padding-l = 40
+			data = {
+				boxData1: boxData.boxData[0],
+				boxData2: boxData.boxData[1]
+			}
+			AxisBackground { dashArray = "1, 2" }
+			AxisBackground {
+				orientation = "vertical"
+				includeEndTicks = true
+				dashArray = "1, 2"
+			}
+			Rect{
+				width = 100%
+				height = 100%
+				stroke = "#000"
+				fill = "none"
+			}
+			@for (item, index) in boxData.boxData{
+				Boxes {
+					@let offsetX = gridW / 7
+					key = index
+					data = "boxData" + (index + 1).toString()
+					showMean = true
+					showNotch = false
+					x = -offsetX + 2 * offsetX * index
+					:box (_d) {
+						Rect.full  {
+							fill = "white"
+							stroke = colors[index]
+							// fillOpacity = 
+							behavior:tooltip {
+								content = (`min: ${_d.data[0].toFixed(2)} <br>
+											first quartile: ${_d.data[1].toFixed(2)} <br>
+											median: ${_d.data[2].toFixed(2)} <br>
+											third quartile: ${_d.data[3].toFixed(2)} <br>
+											max: ${_d.data[4].toFixed(2)} <br>`)
+							}
+							x = 33%
+							width = 33%
+						}
+					}
+					:whiskle (d) {
+						Line { x1 = 50%; x2 = 50%; y1 = 0; y2 = 100%; stroke = colors[index];
+						}
+					}
+					:outlier{
+						@if config.showOutliers {
+							Circle.centered { r = 2; fill = colors[index] }
+						} @else {
+							Circle.centered { fill = "none" }
+						}
+					}
+					:mean(means) {
+						// Line {x1 = 33%; x2 = 66%; stroke = colors[index]}
+					}
+					:median(d) {
+						Line {x1 = 33%; x2 = 66%; stroke = colors[index]}
+					}
+				}
+			}
+			Axis("left");
+			Axis("bottom") {
+				y = 100%
+				:label (tick) {
+					Text {
+						y = 5
+						text = tick.value
+						rotation = @rotate(-config.xLabelRotation)
+						anchor = @anchor("r", "m")
+						fontSize = 12
+					}
+				}
+			}
+			Component {
+				x = -25; y = 50%
+				rotation = @rotate(-90)
+				Text(ylabel) { anchor = @anchor("bottom", "center") }
+			}
+			Component { // legend
+				x = 5%; y = 5%
+				@for (item, index) in boxData.classifications{
+					Line { key = index; x1 = 7.5; x2 = 7.5; y1 = 24 * index - 10; y2 = 24 * index + 10; stroke = colors[index] }
+					
+					Rect {
+						key = index
+						x = 0
+						y = index * 24
+						height = 10
+						width = 15
+						anchor = @anchor("middle","left")
+						fill = "white"
+						stroke = colors[index]
+					}
+					Line { key = [index, 1]; x1 = 0; x2 = 15; y1 = 24 * index; y2 = 24 * index; stroke = colors[index] }
+					Text{
+						x = 20
+						y = index * 24
+						key = index
+						anchor = @anchor("middle","left")
+						text = item
+						fill = "#000"
+						fontSize = 12
+					}
+				}
+			}
+		}
+	}
+	
+	
+}
+}

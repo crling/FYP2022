@@ -1,0 +1,10 @@
+svg {
+	width = 2000
+	height = 1000
+	Component{
+        height = height; width = width; padding = 80
+        FYPPlot{
+            @props prop
+	    }
+	}
+}

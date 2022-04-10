@@ -1,0 +1,206 @@
+// Place all the styles related to the welcome controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "partials/variables"
+
+.doap-account-card
+    margin: 6rem auto
+    color: $gray-800
+    border: 1px solid $gray-300
+    background: $gray-100
+    border-radius: 1rem
+    width: 350px
+    max-width: 100%
+    box-shadow: 0 0 32px $gray-900
+    .doap-account-section
+        padding: 1rem 2rem
+    .doap-account-header
+        color: $gray-600
+        text-transform: uppercase
+        text-align: center
+        padding: 1.5rem 0
+        border-bottom: 1px solid $gray-300
+        h2, h3, h4
+            font-size: 1.5rem
+            margin: 0
+    .doap-account-links
+        padding: 1rem 2rem 2rem 2rem
+        .doap-account-link
+            a
+                font-size: 0.9rem
+                color: $gray-600
+
+
+footer.page-footer
+    // height: $footer-height
+    padding: 20px 0
+    background: $gray-900
+    color: $white
+    ul
+        padding-left: 0
+        list-style: none
+    a
+        color: #697A89
+    h4
+        margin: 30px 0
+    hr
+        border-bottom: 1px solid #333
+        border-top: 1px solid #111
+    p, ul
+        color: $gray-500
+
+body.welcome
+    .navbar
+        z-index: 1
+    .navbar.navbar-light
+        border-bottom: 1px solid #aaa
+    section
+        &.heading
+            position: relative
+            padding: 8rem 0 12rem 0
+            h1
+                font-size: 5rem
+                font-weight: 300
+                line-height: 1.2
+                .em
+                    font-size: 4.8rem
+                    color: lighten($pink, 5%)
+                    font-weight: bold
+            .index-bg
+                position: absolute
+                z-index: 0
+                bottom: 0
+            .container
+                position: relative
+                z-index: 2
+            .index-lead
+                font-size: 1.5rem
+                font-weight: bold
+            .index-more
+                width: 90%
+                margin: 2rem 0 4rem 0
+        &.focus
+            // @include media-breakpoint-down(md)
+            .container
+                width: 100%
+                max-width: none
+            .doap-index-card
+                margin-bottom: 2rem
+            padding: 6rem 0 4rem 0
+            h2
+                font-size: 3.5rem
+            .focus-item
+                position: relative
+                height: 400px
+                .focus-body
+                    padding: 2rem
+                    position: absolute
+                    bottom: 0
+                    z-index: 10
+                    background: $white
+                .focus-bg
+                    width: 100%
+                    height: 250px
+                    object-fit: cover
+        &.features
+            padding: 5rem 0 6rem 0
+            background: #ffffff !important
+            .feature-container
+                margin-top: 4rem
+            .feature-item
+                position: relative
+            h2
+                font-size: 3.5rem
+            .icon
+                position: relative
+                margin-bottom: 2rem
+                color: $gray-700
+                font-size: 6rem
+                text-shadow: 0 2px 2px $gray-200
+                .fa, .fas
+                    margin: 0
+                &:after
+                    content: ''
+                    position: absolute
+                    width: 20%
+                    left: 40%
+                    bottom: -1rem
+                    height: 2px
+                    background: $gray-400
+        &#dataset_list
+            width: 100%
+            height: 15rem
+            background-color: #f8f9fa
+            color: #000000
+            padding: 2em
+            .elemet_wrapper 
+                padding: 2em 0em
+                span.ds
+                    border-radius: 10px
+                    box-shadow: 0 0 32px darken($gray-300, 5%)
+                    height: 5rem
+                    background-color: #ffffff
+                    width: 20%
+                    margin: 1rem 3rem 1rem 0rem
+                    font-weight: bold
+                    color: #000000
+                    padding: 2rem
+                    text-align: center
+                    font-size: small
+                    a
+                        color:#000000
+
+        &#function_card
+            width: 100%
+            height: auto
+            background-color: #f8f9fa
+            color: #000000
+            padding: 2em
+            #cards_wrapper
+                
+                width: 100%
+                padding: 1em
+                
+                .card
+                    border-radius: 50px
+                    box-shadow: 0 0 32px darken($gray-300, 5%)
+                    display: table-cell
+                    height: 100%
+                    width: 25%
+                    overflow: hidden
+                    font-size: 13px
+                    padding: 2em
+                    
+                    .card_img
+                        width: 100%
+                        img
+                            width: 100%   
+                    .card_body
+                        h5
+                            text-align: center
+                        padding: 10px
+                        width: 100%
+    
+           
+    .doap-index-card
+        border: 1px solid $gray-400
+        border-radius: calc(1rem + 1px)
+        color: $gray-900
+        box-shadow: 0 0 32px darken($gray-300, 5%)
+        overflow: hidden
+    .row.form-container
+        padding: 0 100px
+        form.contact-form, form.thanks-form
+            width: 100%
+            padding: 30px 40px
+            box-shadow: 0 3px 40px rgba(8, 48, 80, 0.1)
+            border-radius: 4px
+            z-index: 2
+            background-color: #fff
+            margin-top: -80px
+            margin-bottom: 78px
+        form.thanks-form
+            min-height: 500px
+            p 
+                margin-top: 200px

@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    title = yield :title
+    = csrf_meta_tags
+    = favicon_link_tag '/favicon.ico'
+    = render 'partials/assets'
+    = yield :head
+
+  - body_class = [controller_name]
+  - if page_is_dark?
+    - body_class << 'bg-dark'
+    - body_class << 'text-light'
+  body class=(body_class.join ' ')
+    = include_gon
+    / flash
+    #alerts
+      - flash.each do |type, msg|
+        .alert-group
+          div class="alert #{bootstrap_alert_class_for_flash(type)} alert-dismissable fade show global-alert"
+            button.close &times;
+            - if msg.is_a? Array
+              - msg.each do |line|
+                div = line
+            - else
+              = msg
+
+          .progress style="height: 2px;"
+            div class="progress-bar progress-bar-striped bg-#{bootstrap_class_for_flash(type)}" role="progressbar" style="width:0%;"
+
+    = render 'partials/nav'
+    #wrapper
+      - if %w[analysis].include? controller_name
+        = render 'partials/side_bar'
+      #main
+        = yield
+      #disable-fill
+    - unless %w[analysis].include? controller_name
+      = render 'partials/footer'
+    = yield :page_script

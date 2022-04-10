@@ -1,0 +1,4 @@
+t	p-value
+case-control:control-control	0.218805197573
+case-control:case-case	0.0223595404461
+control-control:case-case	0.460729192069

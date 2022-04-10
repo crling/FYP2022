@@ -1,0 +1,99 @@
+- content_for :title
+  | Gutmeta
+section.heading.bg-light.text-light
+  svg.index-bg width="100%" viewBox="0 0 1920 2820"
+    path d="M0,0 L0,2700 L400,2820 L1920,2620 L1920,0 Z" fill="#343a40"
+  .container
+    h1
+      | Gut&nbsp;
+      span.em Microbiome
+      br
+      | Analysis Platform
+    / p.index-lead
+    /   | With the Focus on Cancer Studies
+    p
+      | Gut microbiome analysis platform (GMAP) contains three major features:
+      ul
+        li 
+          | curated metagenomics database Human Gut Metagenomics Database of over 10,000 samples
+        li 
+          | analyze and visualize the results of your data
+        li
+          | co-analysis and visualizing user data with the samples in our databases
+      
+      | We collected over 10,000 samples of whole-genome shotgun sequencing metagenomics data in the dataset,
+      | curated process the data to taxonomy abundance and functional profiling abundance. 
+      | The analysis pipeline had been implemented on Deepomics.org, 
+      | which allow you to upload your data to process the analysis online and 
+      | get interactive visualization online. Further, you can create your sub dataset 
+      | from our database by searching and selecting on our database page. 
+      | You can then co-analyze your data with the subset you built to process 
+      | our online analysis and visualization. The visualization modules allow you to upload results 
+      | of a single analysis treated by yourself or visualize other commonly used graph used in 
+      | metagenomics analysis.
+
+
+
+section#function_card
+  .container
+   h2
+      | Function
+
+  #cards_wrapper.container
+    .card-deck
+      .card
+        .card_img
+          =link_to '/database/overview'
+            =image_tag "research.png", :alt=>"Human Gut Metagenomics.png"
+        .card_body
+          h5
+            |Human Gut Metagenomics Database
+          p.card-text
+            |curated database with over 10,000 
+            |metagenomics sequencing data
+      .card
+        .card_img
+          =link_to "/submit/analyses"
+            =image_tag "bioinformatics.png", :alt=>"Analyze you data.png"
+        .card_body
+          h5
+            |Analyze your data
+          p.card-text
+            |containing diversity analysis, differential testing, 
+            
+            |diseases classifier, PCA,
+            
+            |functional enrichments and so on
+      .card
+        .card_img
+          =link_to "/visualizer"
+            =image_tag "bacteria.png" , :alt=>"Visualize your results.png"
+        .card_body
+          h5
+            |Visualize your results 
+          p.card-text
+            |containing  corresponding visualization of analysis result and basic sample and
+            |basic sample information visualization and so on
+
+section#dataset_list
+    .container
+      h2
+        | My dataset
+
+      
+      .elemet_wrapper
+        - @dataset_list.each do |dataset|
+          span.ds
+            = link_to dataset.name, user_dataset_path(:user_id=>@user.id, :id => dataset.id)
+        span#add_foler_icon
+          =link_to new_user_dataset_path(:user_id=>@user.id)
+            = image_tag 'folder-plus.svg'
+        
+          / a.btn.btn-xlg.btn-doap.btn-outline-light.text-uppercase.font-weight-bold href='/docs/index.html'
+          /   | Learn More
+/section.contact
+/  .container
+/    .lead.w-100.text-center
+/      | DOAP's team works directly with researchers, developers and individual users.&nbsp;
+/      = link_to 'Speak with us to learn more.' ,'#'
+

@@ -1,0 +1,125 @@
+<% content_for:head do%>
+
+  
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/3.3.2/js/dataTables.fixedColumns.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.3.2/css/fixedColumns.dataTables.min.css">
+  <%= javascript_pack_tag "datatable" %>
+<%end%>
+
+<% content_for :title, 'Project '+ @project.name  %>
+
+<div class="container">
+  <h1>
+    Project Information
+  </h1>
+  <%#= link_to 'Edit', edit_project_path(@project) %> 
+  <%= link_to 'Back', projects_path %>
+  <br/>
+
+  <div class="row">
+    <% @attrs.each do |attr| %>
+      <% if attr != 'id' && attr != 'created_at' && attr != 'updated_at'%>
+        <div class="col-md-6">
+          <strong><%=attr%>: </strong>
+          <%= @project[attr] %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <br />
+
+  <h2>Samples</h2>
+  <p>
+    <span class="download_span">
+      Download samples information:
+      <%= link_to "Metadata", project_path(format: "csv") %>
+    </span>
+  </p>
+
+  <div id='hidden_helper'>
+    Click to view hidden columns:
+    <br />
+    <br />
+    <% i=1 %>
+    <% @sample_attrs.each do |attr| %>
+      
+        <% if !@vis.include? attr %>
+          <button class="toggle-vis" data-column='<%=i.to_s%>'> 
+            <%= attr%>
+          </button>
+        <% end %>
+        <%i += 1%>
+      
+    <%end%>
+  </div>
+  <br/>
+  <%= form_tag make_selected_file_samples_path, multipart: true do %>  
+    <%= content_tag :table, role: :datatable, class: "display", id: "table_page", data: { url: project_path(format: :json)} do %>
+      <thead>
+            <th>
+              <input type="checkbox" class="selectAll" name="selectAll" value="all">
+            </th>
+            <% @sample_attrs.each do |attr| %>
+              
+              <th> <%= attr %> </th>
+              
+            <% end %>
+            <th>Action</th>
+      </thead>
+      <tbody>
+      </tbody>
+    <% end %>
+
+    <%= submit_tag "dowload selected samples metadata to file", :name => 'metadata', :class => "s_table_sub" %>
+    <%= submit_tag "download selected samples abundance to file", :name => 'abundance', :class => "s_table_sub"  %>
+    <%#= submit_tag "download selected samples sequence to file", :name => 'sequence' %>
+    <br />
+
+
+    <%= hidden_field_tag 'project_id', @project.id %>
+
+    <%= submit_tag "dowload filtered samples metadata to file", :name => 'filter_metadata', :class => "s_table_sub" %>
+    <%= submit_tag "dowload filtered samples abundance to file", :name => 'filter_abd', :class => "s_table_sub" %>
+    <br />
+  
+    <%= submit_tag "export selected samples to", :name => 'seleted2ds', :class => "s_table_sub"  %>
+    <%= submit_tag "export filtered samples to", :name => 'filter2ds', :class => "s_table_sub"  %>
+    <select id="select_box" name="ds_selected">
+      <option value="">--Please choose a dataset--</option>
+      <% @datasets.each do |ds|%>
+        <option value=<%=ds.name%>> <%=ds.name%></option>
+      <%end%>
+    </select>
+  <% end %>
+  <p>
+    If you do NOT have any dataset, create one here: 
+    <%=link_to 'Create new dataset', new_user_dataset_path(:user_id=>@user.id)%>
+  </p>
+
+  <p>
+    *To avoid frenquent download, please refresh the page to enable download again.
+  </p>
+
+
+
+  <%#=link_to 'Download selected sequencing data', download_selected_abd_project_samples_path(@project.id) %>
+
+  <%#= form_tag import_project_samples_path([@project]), multipart: true do %>
+    <%#= file_field_tag :file %>
+    <%#= submit_tag "Import metadata by csv" %>
+  <%# end %>
+
+  <%#= form_tag import_abd_table_project_samples_path([@project]), multipart: true do %>
+    <%#= file_field_tag :file %>
+    <%#= submit_tag "Import abundance by tsv" %>
+  <%# end %>
+
+</div>
+
+
+

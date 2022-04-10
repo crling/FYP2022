@@ -1,0 +1,14 @@
+- content_for :title
+  | Add Visualizer
+
+.container
+  ol.breadcrumb
+    li.breadcrumb-item
+      = link_to 'Visualizers', admin_visualizers_path
+    li.breadcrumb-item.active New
+  .card
+    .card-body
+      h2.card-title Add Visualizer
+      hr
+      = simple_form_for @visualizer, url: admin_visualizers_path do |f|
+        = render 'form', f: f

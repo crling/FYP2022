@@ -1,0 +1,215 @@
+Component {
+    EditText {
+        text = title
+        anchor = @anchor("c", "t")
+        y = 10; fontSize = 13; x = centerX
+    }
+    Component {
+        @let gridH = 12
+        x = offsetX; y = offsetY
+        Rows {
+            static = true
+            @for (sample, i) in hist.samples {
+                XYPlot {
+                    key = sample
+                    discreteCategory = true
+                    categories = filteredSpecies
+                    valueRange = [-10, 110]
+                    gap = 0
+                    Axis("left") {includeEndTicks = false}
+                    AxisBackground { dashArray = "1, 2" }
+                    AxisBackground {
+                        orientation = "vertical"
+                        includeEndTicks = true
+                        dashArray = "1, 2"
+                    }
+                    Rect.full {
+                        stroke = @color("line"); fill = "none"
+                    }
+                    
+                    Rect {
+                        x = 100%; height = 100%; width = 18; fill = "#ccc"
+                        stroke = @color("line"); strokeWidth = 0.5
+                    }
+                    Text {
+                        rotation = @rotate(90)
+                        x = @geo(100, 10); y = 50%; anchor = @anchor("center", "middle")
+                        text = sample; fontSize = 12
+                    }
+                    height = plotHeight; width = mainWidth
+                    padding-y = 2
+                    data = hist.result[sample]
+                    stackedData = {
+                        "stacked": hist.indexes
+                    }
+                    StackedBars {
+                        //x = 5
+                        data = "stacked"
+                        :children(d) {
+                            Rect.full{
+                                fill = colorDict[d.key]
+                                stroke = @color("line")
+                                strokeWidth = 0.5
+                                behavior:tooltip {
+                                    content = `Species: ${d.data.pos}<br>Strain: ${d.key}<br>Proportion: ${d.data.value.toFixed(2)}%`
+                                }
+                                //anchor = @anchor("top","center")
+                            }
+                        }
+                        width = 100%
+                        height = 100%
+                        stroke = "#fff"
+                        fill = "none"
+                    }
+                }
+            }
+            Component { //meta area
+                height = gridH * metaFeatures.length
+                Component {
+                    static = true
+                    Rows {
+                        @for (f, i) in metaFeatures {
+                            @if !!metaInfo[f] {
+                                Component {
+                                height = 12
+                                Component {
+                                    height = 100%
+                                    @for (d, j) in metaData[f] {
+                                        Component {
+                                            height = 100%; width = 100%
+                                            // on:mouseenter = setActive(gridW * j + offsetX)
+                                            // on:mouseleave = setActive(null)
+                                            behavior:tooltip {
+                                                content = `species: ${filteredSpecies[j]}<br>${f}: ${d}`
+                                            }
+                                            @let metaFill = metaInfo[f].color(d)
+                                            @if !!metaFill {
+                                                Rect {
+                                                    height = 95%; width = gridW - 1; x = gridW * j; 
+                                                    fill = metaFill
+                                                }
+                                            } @else {
+                                                Rect {
+                                                    height = 95%; width = gridW - 1; x = gridW * j; fill = "#aaa"
+                                                }
+                                                Line {
+                                                    x1 = gridW * j; x2 = gridW * j + gridW; y1 = 95%; y2 = 0; stroke = "red"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                Text(f) {
+                                    x = mainWidth + 5; 
+                                    // x = offsetX + gridW * filteredSamples.length + 5; 
+                                    y = 6; anchor = @anchor("m", "l"); fontSize = 11
+                                }
+                            }
+                            }
+                            
+                        }  
+                    }
+                }
+            }
+
+            Component {
+                Columns {
+                    @for s in filteredSpecies {
+                        Component {
+                            width = gridW
+                            @let fill = highlightSpecies.has(s) ? "red" : "black"
+                            @if labelAngle > 0 {
+                                Text {
+                                    rotation = @rotate(labelAngle); fill =  fill
+                                    text = s; anchor = @anchor("l", "m")
+                                    y = 5; x = @geo(50, 1); fontSize = 11
+                                    style:font-style = italicLabel ? "italic" : "normal"
+                                }
+                            } @else {
+                                Text {
+                                    rotation = @rotate(labelAngle); fill =  fill
+                                    text = s; anchor = @anchor("r", "m")
+                                    y = 5; x = @geo(50, 1); fontSize = 11
+                                    style:font-style = italicLabel ? "italic" : "normal"
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        Component {
+            x = mainWidth + 30
+            Component {
+                y = 5; height = 200; width = 60
+                Rect.full {
+                    stroke = @color("line"); fill = "#fff"
+                }
+                Text("Strain") {
+                    fontSize = 11; x = 3; y = 3
+                }
+                @for (source, i) in sources {
+                    Rect.centered {
+                        x = 8; y = 22 + 16 * i; height = 10; width = 10
+                        fill = colorDict[source]; stroke = @color("line"); strokeWidth = 0.5
+                    }
+                    Text(source) {
+                        x = 18; y = 22 + 16 * i; anchor= @anchor("m", "l")
+                    }
+                }
+            }
+            Rows {
+                y = 220
+                @for feature in metaFeatures {
+                    Rows {
+                        Component {
+                            width = 130
+                            height = 40 + 16 * metaInfo[feature].values.length
+                            Rect.full {
+                                stroke = @color("line"); fill = "white"
+                            }
+                            Rows {
+                            Component {
+                                y = 3; height = 13
+                                Text(feature) {x = 3; fontSize = 11}
+                            } 
+                            Component {
+                                height = 16
+                                Rect {
+                                    x = 3; y = 3; height = 10; width = 10; fill = "#aaa"
+                                    stroke = @color("line"); strokeWidth = 0.5
+                                }
+                                Line {
+                                    x1 = 3; x2 = 13; y1 = 13; y2 = 3; stroke = "red" 
+                                }
+                                Text("NA") {
+                                    fontSize = 11; anchor = @anchor("l", "m"); x = 11 
+                                    x = 18; y = 8
+                                }
+                            }
+                            @for (cat, j) in metaInfo[feature].values {
+                                Component {
+                                    height = 16
+                                    Rect.centered {
+                                        height = 10; width = 10; x = 8; y = 8
+                                        fill = metaInfo[feature].color(cat); stroke = @color("line"); strokeWidth = 0.5
+                                    }
+                                
+                                    Text(cat) {
+                                        x = 18; y = 8; anchor = @anchor("l", "m")
+                                        fontSize = 11
+                                    }
+                                    
+                                }
+                            }
+                            }
+
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}

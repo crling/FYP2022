@@ -1,0 +1,4 @@
+s	p-value
+case-control:control-control	0.277171825727
+case-control:case-case	0.0342932748624
+control-control:case-case	0.471000433912

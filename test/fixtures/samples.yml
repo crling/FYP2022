@@ -1,0 +1,61 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sample_name: MyString
+  original_description: MyText
+  curated_description: MyText
+  project_id: MyString
+  run_id: MyString
+  second_run_id: MyString
+  meta_project_id: MyString
+  experiment_type: MyString
+  nr_reads_sequenced: MyString
+  instrument_model: MyString
+  disease_phenotype: MyString
+  is_disease_stage_available: MyString
+  disease_stage: MyString
+  more: MyText
+  more_info: 
+  country: MyString
+  collection_date: MyString
+  sex: MyString
+  host_age: 1
+  diet: MyString
+  logitude: MyString
+  latitude: MyString
+  BMI: 1.5
+  Recent.Antibiotics.Use: MyText
+  antibiotics_used: MyText
+  Antibiotics.Dose: MyText
+  Days.Without.Antibiotics.Use: 1
+  project: 
+
+two:
+  sample_name: MyString
+  original_description: MyText
+  curated_description: MyText
+  project_id: MyString
+  run_id: MyString
+  second_run_id: MyString
+  meta_project_id: MyString
+  experiment_type: MyString
+  nr_reads_sequenced: MyString
+  instrument_model: MyString
+  disease_phenotype: MyString
+  is_disease_stage_available: MyString
+  disease_stage: MyString
+  more: MyText
+  more_info: 
+  country: MyString
+  collection_date: MyString
+  sex: MyString
+  host_age: 1
+  diet: MyString
+  logitude: MyString
+  latitude: MyString
+  BMI: 1.5
+  Recent.Antibiotics.Use: MyText
+  antibiotics_used: MyText
+  Antibiotics.Dose: MyText
+  Days.Without.Antibiotics.Use: 1
+  project: 

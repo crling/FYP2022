@@ -1,0 +1,66 @@
+Component {
+Component {
+    @let scatterSize = 8
+    x = 50; y = 50
+    ComplexScatterplot {
+        plotSize = [mainGridLength, mainGridLength]
+        hiddenSamples = hiddenSamples;
+        @props data
+        @props scatterConfig
+    }
+    ComplexBoxplot {
+        y = mainGridLength + 60
+        colors = colors
+        plotSize = [mainGridLength, boxGridHeight]
+        @props boxDataX
+        @props xBoxConfig
+        @props boxConfig
+    }
+    ComplexBoxplot {
+        x = mainGridLength + 60
+        colors = colors
+        plotSize = [boxGridHeight, mainGridLength]
+        @props boxDataY
+        @props yBoxConfig
+        @props boxConfig
+    }
+    Component {
+        x = mainGridLength + 60; y = mainGridLength + 60
+        @let groupH = groups.length * 14 + 16
+        Legend {
+            padding = 8
+            width = legendWidth
+            lineHeight = 14
+            data = groupLegend
+        }
+        @if (metaInfo[colorKey].isNumber) {
+            Component {
+                y = groupH + 19
+                Text(colorKey) {
+                    y = -4; anchor = @anchor("b", "l")
+                    style:font-weight="bold"
+                }
+                height = 20; width = legendWidth
+                Rect.full {
+                    fill = @gradient("bg")
+                }
+                Axis {
+                    xScale = @scale-linear(metaInfo[colorKey].rangeMin, metaInfo[colorKey].rangeMax, 0, legendWidth)
+                    y = 20; orientation = "bottom"
+                    includeEndTicks = false
+                }
+            }
+        } @else {
+            Legend {
+                y = groupH + 10
+                padding = 8
+                width = legendWidth
+                lineHeight = 14
+                data = classLegend
+                on:dblclick = () => alert("yeeeee")
+            }
+        }
+        
+    }
+}
+}

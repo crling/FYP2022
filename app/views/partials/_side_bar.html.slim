@@ -1,0 +1,8 @@
+nav#sidebar.active
+    .sidebar-content
+        -if controller_name == 'analyses'
+        = render 'partials/viz_sidebar'
+    .sidebar-header
+        = yield :sidebar_header
+    .sidebar-toolbar
+        = yield :sidebar_footer

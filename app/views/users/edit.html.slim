@@ -1,0 +1,10 @@
+- content_for :title do
+  | User setting
+
+.container
+  .card
+    .card-body
+      h2.card-title User Setting
+      hr
+      = simple_form_for @user, url: user_path(@user) do |f|
+        = render 'form', f: f

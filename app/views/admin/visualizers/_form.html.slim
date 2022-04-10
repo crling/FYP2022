@@ -1,0 +1,59 @@
+= f.input :name
+= f.input :js_module_name
+/- viz_data_sources = VizDataSources.all.map { |vds| [vds.name, vds.id] }
+.form-group.row
+  - prefix = 'visualizer[viz_data_sources_attributes]'
+  label.col-sm-2.col-form-label Data sources
+  .col-sm-10
+    .form-opt-container
+      - f.object.viz_data_sources.each_with_index do |vds, index|
+        .input-group.mb-1
+          - vdsr = "#{prefix}[#{index}]"
+          = hidden_field_tag "#{vdsr}[id]", vds.id
+          / label.col-sm-2.col-form-label
+          /   span = vds.data_type
+          .input-group-prepend
+            span.input-group-text
+              = hidden_field_tag "#{vdsr}[data_type]", '0'
+              = text_field_tag "#{vdsr}[data_type]",  vds.data_type
+            span.input-group-text
+              = hidden_field_tag "#{vdsr}[optional]", '0'
+              = check_box_tag "#{vdsr}[optional]", '1', vds.optional
+              = label_tag "#{vdsr}[optional]", "Optional", class: 'mb-0 ml-2'
+            span.input-group-text
+              = hidden_field_tag "#{vdsr}[allow_multiple]", '0'
+              = check_box_tag "#{vdsr}[allow_multiple]", '1', vds.allow_multiple
+              = label_tag "#{vdsr}[allow_multiple]", "Allow multiple files", class: 'mb-0 ml-2'
+          .input-group-append
+            span.input-group-text
+              = check_box_tag "#{vdsr}[_destroy]"
+              = label_tag "#{vdsr}[_destroy]", "Remove", class: 'mb-0 ml-2'
+    button.float-right.btn.btn-secondary.btn-add-opt type="button"
+      = icon 'fas', 'plus'
+      | Add
+    template
+      .input-group.mb-1.fresh
+        .input-group-prepend
+          span.input-group-text
+            = hidden_field_tag "#{prefix}[_id_][data_type]", '0'
+            = text_field_tag "#{prefix}[_id_][data_type]"
+            /= label_tag "#{prefix}[_id_][data_type]", "Optional", class: 'mb-0 ml-2'
+          span.input-group-text
+            = hidden_field_tag "#{prefix}[_id_][optional]", '0'
+            = check_box_tag "#{prefix}[_id_][optional]"
+            = label_tag "#{prefix}[_id_][optional]", "Optional", class: 'mb-0 ml-2'
+          span.input-group-text
+            = hidden_field_tag "#{prefix}[_id_][allow_multiple]", '0'
+            = check_box_tag "#{prefix}[_id_][allow_multiple]"
+            = label_tag "#{prefix}[_id_][allow_multiple]", "Allow multiple files", class: 'mb-0 ml-2'
+        /= select_tag "#{prefix}[_id_][file_key_id]", options_for_select(viz_data_sources), class: 'form-control'
+        .input-group-append
+          .btn.btn-secondary.btn-rm-opt
+            = icon 'fas', 'minus'
+            | Remove
+hr
+= f.button :submit
+
+- content_for :page_script do
+  =javascript_pack_tag 'admin-form'
+    

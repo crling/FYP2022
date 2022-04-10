@@ -1,0 +1,86 @@
+<% content_for :head do %>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<%end%>
+<% content_for :title, "Overview" %>
+
+<div class = "index-banner">
+    <div class = "container">
+    <h1 class = "display-4 font-weight-bold">
+        Database Overview
+    </h1>
+    </div>
+    
+</div>
+<br>
+<div id="head" class="container Block">
+
+    
+    <div class="row">
+        <div class="col">
+            <div class="ov-number">
+                11688
+            </div>
+            <div class="ov-type">
+                Samples
+            </div>
+            
+            
+        </div>
+        <div class="col">
+            <div class="ov-number">
+                5813
+            </div>
+            <div class="ov-type">
+                Individuals
+            </div>
+            
+            
+        </div>
+
+        <div class="col">
+            <div class="ov-number">
+                54
+            </div>
+            <div class="ov-type">
+                Projects
+            </div>
+            
+           
+        </div>
+
+        <div class="col">
+            <div class="ov-number">
+                29
+            </div>
+            <div class="ov-type">
+                Diseases
+            </div>
+            
+            
+        </div>
+
+        <div class="col">
+            <div class="ov-number">
+                15
+            </div>
+            <div class="ov-type">
+                Countries
+            </div>
+            
+            
+        </div>
+    </div>
+    <br/>
+</div>
+<div class = "container Block"> 
+<h2>Sample distribution</h2>
+<div id = "world-map" class = "container Block"> </div>
+</div>
+
+<%=javascript_pack_tag 'db-overview-viz'%>
+
+
+
+

@@ -1,0 +1,36 @@
+- content_for :title
+  | Visualization
+- content_for :head
+    =javascript_pack_tag 'visualizer'
+    =javascript_pack_tag 'analysis-viz'
+    =stylesheet_pack_tag 'analysis-viz'
+
+#vapp
+#analysis-memo
+  .container
+    ul#memo-tabs.nav.nav-tabs role="tablist"
+      li.nav-item
+        = link_to '#atab-manual', class: 'nav-link active', data: { toggle: 'tab' } do
+          = icon 'fas', 'question-circle'
+          | Manual
+      li.nav-item
+        = link_to '#atab-ref', class: 'nav-link', data: { toggle: 'tab' } do
+          = icon 'fas', 'info-circle'
+          | References
+      li.nav-item
+        = link_to '#atab-about', class: 'nav-link', data: { toggle: 'tab' } do
+          = icon 'fas', 'info-circle'
+          | About
+    .tab-content
+      #atab-manual.tab-pane.py-4.show.active
+        / == @analysis.rendered_doc
+        == @analysis.rendered_doc
+      #atab-ref.tab-pane.py-4
+        == @analysis.rendered_ref
+      #atab-about.tab-pane.py-4
+        == @analysis.rendered_about
+      / #atab-ref.tab-pane.py-4
+      /   == @analysis.rendered_ref
+      / #atab-about.tab-pane.py-4
+      /   == @analysis.rendered_about
+=javascript_pack_tag "viz/#{@analysis.visualizer.js_module_name}"

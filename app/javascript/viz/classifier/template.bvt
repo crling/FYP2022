@@ -1,0 +1,210 @@
+svg {
+    width = 800; height = 800
+    @let pickVal = pickCats.length
+    
+Component {
+    x = 50; y = 50
+    Rows {
+        Component {
+            height = 20
+            EditText {
+                @props config.titleProps
+                text = titles[0]
+                style:font-weight = "bold"
+            }
+        }
+    Columns {
+        height = 250
+        static = true
+        GridPlot {
+            @props barData1
+            :leftAxis {
+                Axis("right") {
+                    tick.visible = false
+                    :label(tick) {
+                        EditText {
+                            text = tick.value
+                            x = 4; anchor = @anchor("l", "m")
+                            fontSize = 11;
+                        }
+                    
+                    }
+                }
+            }
+            :content {
+                Bars {
+                    :children(d) {
+                        Rect.full {
+                            fill = pickCats.indexOf(d.pos) >= 0 ? colors.barHighlight : colors.bar
+                        }
+                        
+                    }
+                }
+                
+            }
+        }
+         GridPlot {
+            @props barData2
+            :leftAxis {
+                Axis("right") {
+                    tick.visible = false
+                    :label(tick) {
+                        EditText {
+                            text = tick.value
+                            x = 4; anchor = @anchor("l", "m")
+                            fontSize = 11
+                        }
+                    }
+                }
+            }
+            :content {
+                Bars {
+                    :children(d) {
+                        Rect.full {
+                            fill = pickCats.indexOf(d.pos) >= 0 ? colors.barHighlight : colors.bar
+                        }
+                    }
+                }
+            }
+        }
+        GridPlot {
+            @props lineData
+            :content {
+                @for (d, k) in lineData.data {
+                    Polyline {
+                        points = @scaled(d.values)
+                        key = k
+                        stroke = k === medianLineKey ? "black" : "grey"
+                        strokeWidth = 1.5
+                    }
+                    Line {
+                        x = @scaled-x(pickVal); y2 = 100%
+                        stroke = "red"; strokeWidth = 1
+                    }
+                    // EditText(pickVal) {
+                    //     x = @scaled-x(pickVal); y = @geo(100, 3)
+                    //     fill = "red"
+                    //     fontSize = 11; anchor = @anchor("t", "c")
+                    // }
+                }
+            }
+        }
+    }
+    Component {
+            height = 20
+            EditText {
+                text = titles[1]
+                @props config.titleProps
+                style:font-weight = "bold"
+            }
+        }
+    Columns {
+        GridPlot {
+            static = true
+            @props boxData
+            :content {
+                Boxes {
+                    data = "boxData"
+                    showMean = true
+                    showNotch = false
+                    :box (_d) {
+                        Rect.full  {
+                            @let boxColors = getBoxColors(colors[groups[_d.pos]])
+                            fill = boxColors[1]
+                            stroke = boxColors[0]
+                            // fillOpacity = 0.001
+                            behavior:tooltip {
+                                content = (`min: ${_d.data[0].toFixed(2)} <br>
+                                            first quartile: ${_d.data[1].toFixed(2)} <br>
+                                            median: ${_d.data[2].toFixed(2)} <br>
+                                            third quartile: ${_d.data[3].toFixed(2)} <br>
+                                            max: ${_d.data[4].toFixed(2)} <br>`)
+                            }
+                            x = 20%
+                            width = 60%
+                        }
+                    }
+                    :whiskle (d) {
+                        Component {
+                            @let boxColors = getBoxColors(colors[groups[d.pos]])
+                            height = 100%
+                            Line { 
+                                x = 50%; y2 = 100%
+                                stroke = boxColors[0]; strokeWidth = 2
+                            }
+                        }
+                        
+                    }
+                    :outlier(d){
+                        Circle.centered { 
+                            @let boxColors = getBoxColors(colors[groups[d[0]]])
+                            r = 2; fill = boxColors[0]
+                        }
+                    }
+                    :mean(d) {
+                        Line {
+                            @let boxColors = getBoxColors(colors[groups[d.pos]])
+                            x1 = 20%; x2 = 80%; stroke = boxColors[2]; strokeWidth = 2
+                        }
+                    }
+                    :median {}
+                }
+                
+            }
+        }
+        GridPlot {
+            static = true
+            @props scatterData
+            :content {
+                Bars {
+                    :children(d) {
+                        Circle.centered {
+                            x = 50%; r = 1.5; stroke = colors[d.data.group]
+                            // fill = colors[d.data.group]
+                            fill = "white"
+                        }
+                    }
+                }
+                Line {
+                    x2 = 100%; y = 50%; stroke = "#666"; dashArray = "4 2"
+                }
+            }
+        }
+        GridPlot {
+            @props specifyData
+            :content {
+                Polygon {
+					points = @scaled(specifyData.data.area.values)
+					fill = colors.area
+					stroke = "none"
+				}
+                Polyline {
+                    points = @scaled(specifyData.data.line.values)
+                    stroke = colors.highlight
+                    strokeWidth = 2
+                }
+                Component {
+                    @props notesProps
+                    behavior:drag {
+                        onDrag = @bind(updateNotePos)
+                        validRangeX = [0, specifyData.plotSize[0]]
+                        validRangeY = [0, specifyData.plotSize[1]]
+                    }
+                    Rect.full {
+                        fill = "white"
+                    }
+                    @for (t, i) in specifyNotes {
+                        EditText {
+                            text = t
+                            fontSize = 11; y = 13 * i
+                        }
+                    }
+                }
+            }
+        }
+    }
+    }
+
+}
+    
+}

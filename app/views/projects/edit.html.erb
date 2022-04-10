@@ -1,0 +1,73 @@
+<% content_for :head do %>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+  
+  <%= javascript_pack_tag "table_style" %>
+<% end %>
+
+<div class="container">
+  <h1>Edit Project</h1>
+  
+  <%= render 'form' %>
+  
+  <h2>Samples</h2>
+  <div id='hidden_helper'>
+    Hide columns: 
+    <br />
+    <% i=0 %>
+    <% @sample_attrs.each do |attr| %>
+      
+        <button class="toggle-vis" data-column='<%=i.to_s%>'> 
+          <%= attr.capitalize %>
+        </button>
+        <%i += 1%>
+      
+    <%end%>
+  </div>
+
+
+  <table id="Table" class="display">
+
+      <thead>
+        <% @sample_attrs.each do |attr| %>
+          
+            <th> <%= attr.capitalize %> </th>
+          
+        <% end %>
+        <th>Action</th>
+      </thead>
+
+      <tbody>
+        <% @project.samples.each do |sample| %>
+        
+          <tr>
+            <% @sample_attrs.each do |attr| %>
+              
+                <td> 
+                  <div class="table_cell"> 
+                    <%= sample[attr] %> 
+                  </div>
+                </td>
+              
+            <% end %>
+            
+            <td>
+              <%= link_to 'Show', project_sample_path(sample.project, sample) %>
+              <%= link_to 'Delete', [sample.project, sample],
+                method: :delete,
+                data: { confirm: 'Are you sure to delete ' + sample.sample_name + '?'} %>
+              <%= link_to 'Edit', edit_project_sample_path(sample.project, sample.id) %> 
+            </td>
+          </tr>
+        
+        <% end %>
+      </tbody>
+
+    </table>
+    
+
+  <%= link_to 'create a new sample', new_project_sample_path(@project)%>
+
+  <%= link_to 'Back', "/admin" %>
+</div>

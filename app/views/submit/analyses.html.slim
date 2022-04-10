@@ -1,0 +1,25 @@
+- content_for :title
+  | Analyses
+
+.index-banner
+  .container
+    h1.display-4.font-weight-bold Analyses
+    p.lead.mt-4
+      | DOAP offers a repository of publicly available workflows (chains or pipelines of connected modules) suitable for many different types of data analysis.
+br
+#analyses_list.container-fluid.container
+    .row.cols-xs-space.cols-sm-space.cols-md-space
+        - @analyses.each do |a|
+            / - if visible_analysis(a)
+            .col-lg-4.mb-4
+                .card
+                    - if a.cover_image.blank?
+                        img.card-img-top =image_tag("module.jpg")
+                    - else
+                        img.card-img-top src = a.cover_image
+                    / img.card-img-top src = a.cover_image
+                    .card_body
+                        h5 =a.name
+                        /= link_to "/submit/#{a.mid.to_s}"
+                    .list-group.list-group-flush
+                        = link_to "Submit", "/submit/analysis/#{a.mid.to_s}", class: "list-group-item list-group-item-action text-center"

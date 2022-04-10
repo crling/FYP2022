@@ -1,0 +1,22 @@
+- content_for :title
+  | Pipelines
+
+.index-banner
+  .container
+    h1.display-4.font-weight-bold Analysis Pipelines
+    p.lead.mt-4
+      | DOAP offers a repository of publicly available workflows (chains or pipelines of connected modules) suitable for many different types of data analysis.
+br
+#pipeline_list.container-fluid.container
+    .row.cols-xs-space.cols-sm-space.cols-md-space
+        - @pipelines.each do |p|
+            .col-lg-4.mb-4
+                .card
+                    - if p.cover_image.blank?
+                        img.card-img-top =image_tag("pipeline.png")
+                    - else
+                        img.card-img-top src = p.cover_image
+                    .card_body
+                        h5 =p.name
+                    .list-group.list-group-flush
+                        = link_to "Submit", "/submit/pipeline/#{p.pid.to_s}", class: "list-group-item list-group-item-action text-center"

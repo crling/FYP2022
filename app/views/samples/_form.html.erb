@@ -1,0 +1,29 @@
+<%= form_for([@project, @sample]) do |f| %>
+
+  <% if @sample.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@sample.errors.count, "error") %> prohibited
+        this sample from being saved:
+      </h2>
+      <ul>
+        <% @sample.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <% @sample_attrs.each do |attr| %>
+    <% if attr != 'id' && attr != 'created_at' && attr != 'updated_at' %>
+      <p> 
+        <%= f.label attr.capitalize %> <br>
+        <%= f.text_field attr %>
+      </p>
+
+    <% end %>
+  <% end %>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

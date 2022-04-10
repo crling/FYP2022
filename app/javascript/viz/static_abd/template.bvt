@@ -1,0 +1,657 @@
+svg {
+    Component{
+        @if tree.dataOpt.isRadical {
+            Component{
+                @let lSize = tree.dataOpt.maxLength 
+                @let radius = tree.dataOpt.treeRadius
+                @let r = (radius - lSize) / 8
+                Component {
+                    coord = "polar"
+                    y = tree.dataOpt.treeHeight / 2
+                    width = radius * 2 + 50
+                    Circle.centered {
+                        r = r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 15
+                        behavior:tooltip {
+                            content = "Domain"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 2*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 15
+                        behavior:tooltip {
+                            content = "Kingdom"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 3*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 15
+                        behavior:tooltip {
+                            content = "Phylum"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 4*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 15
+                        behavior:tooltip {
+                            content = "Class"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 5*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 15
+                        behavior:tooltip {
+                            content = "Order"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 6*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 20
+                        behavior:tooltip {
+                            content = "Family"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                    Circle.centered {
+                        r = 7*r
+                        fill = "none"
+                        stroke = "#aaa"
+                        strokeWidth = 5;
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 30
+                        behavior:tooltip {
+                            content = "Genus"
+                        }
+                        stage:active {
+                            strokeOpacity = "0.6"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                }
+                Tree {
+                    ref = "tree"
+                    width = radius * 2 + 50; height = tree.dataOpt.treeHeight
+                    direction = "radical"
+                    r = radius
+                    //scale = "log"
+                    //linkStyle = "straight"
+                    data = tree.newickData
+                    leafSize = lSize
+                    link.strokeWidth = 2
+                    activeLink.stroke = "red"
+                    activeLink.strokeWidth = 5
+                    :node(n){
+                        Component{
+                            @let id = tree.data_dict[n.node.data.name] ? tree.data_dict[n.node.data.name].id : 2
+                            @let value = tree.data_dict[n.node.data.name] ? parseFloat(tree.data_dict[n.node.data.name].Abundance) : 0
+                            Container {
+                                @for (node, i) in tree.colorNodes {
+                                    @if(node.nodeName === n.node.data.name){
+                                        @expr color = node.color 
+                                    }
+                                }
+                            }
+                            Circle.centered{
+                                r =  Math.log2(value + 1) + 4
+                                fill = color
+                                behavior:tooltip {
+                                    content = n.node.data.name
+                                }
+                                @props prop.opt.node
+                            }
+                            on:click = window.open("https://www.ncbi.nlm.nih.gov/taxonomy/" + id, "_blank")
+                            cursor = "pointer"
+                        }
+                    }                         
+                    @let w = 360 / tree.leaves.length
+                    :leaf(l){
+                        Component{
+                            @if tree.dataOpt.isChanged {
+                                Component{
+                                    @let isMax = l.leaf.data.name === tree.dataOpt.aName
+                                    @let isRH = l.tree.isRightHalf(l.leaf.x)
+                                    @let angle = isRH ? 0 : 180
+                                    Container {
+                                        @let id = tree.data_dict[l.leaf.data.name] ? tree.data_dict[l.leaf.data.name].id : 2
+                                        @let value = tree.data_dict[l.leaf.data.name] ? parseFloat(tree.data_dict[l.leaf.data.name].Abundance) : 0
+                                        @let path = ""
+                                        Container {
+                                            @for (leaf, i) in tree.colorNodes {
+                                                @if(leaf.nodeName === l.leaf.parent.data.name){
+                                                    @expr color = leaf.color 
+                                                }
+                                            }
+                                        }
+                                        @for (leaf, i) in tree.path {
+                                            @if leaf.leafName === l.leaf.data.name {
+                                                @expr path = leaf.linkNodes
+                                            }
+                                        }
+                                        Container {
+                                            anchor =  l.tree.leafAnchor(l.leaf)
+                                            x = isRH ? -(r * 8) : (r * 8)
+                                            Arc {
+                                                x1 = isRH ? 90 - (w / 2 - 0.1) : 270 - (w / 2 - 0.1)
+                                                x2 = isRH ? 90 + (w / 2 - 0.1) : 270 + (w / 2 - 0.1)
+                                                r1 = r * 8 + 10
+                                                r2 = r * 8 + 60
+                                                fill = tree.dataOpt.color.get( (Math.log2(value + 1) / Math.log2(tree.dataOpt.Abundance + 1)))
+                                                stage:active {
+                                                    stroke = "red"
+                                                    strokeWidth = 3
+                                                }
+                                                on:mouseenter = $el.stage = "active"
+                                                on:mouseleave = $el.stage = null
+                                                behavior:tooltip {
+                                                    content = path + "Abundance: " + value + "%"
+                                                }
+                                            }   
+                                        }
+                                        Circle.centered{
+                                            r =  Math.log2(value + 1) + 4
+                                            fill = color
+                                            behavior:tooltip {
+                                                content = path + "Abundance: " + value + "%"
+                                            }
+                                            @props prop.opt.node
+                                        }
+                                        on:click = window.open("https://www.ncbi.nlm.nih.gov/taxonomy/" + id, "_blank")
+                                        cursor = "pointer"
+                                    }
+                                }
+                            }
+                            @else{
+                                Component {      
+                                    @let isMax = l.leaf.data.name === tree.dataOpt.aName
+                                    @let isRH = l.tree.isRightHalf(l.leaf.x)
+                                    @let angle = isRH ? 0 : 180
+                                    Container {
+                                        @let id = tree.data_dict[l.leaf.data.name] ? tree.data_dict[l.leaf.data.name].id : 2
+                                        @let value = tree.data_dict[l.leaf.data.name] ? parseFloat(tree.data_dict[l.leaf.data.name].Abundance) : 0
+                                        @let path = ""
+                                        @for (leaf, i) in tree.path {
+                                            @if leaf.leafName === l.leaf.data.name {
+                                                @expr path = leaf.linkNodes
+                                            }
+                                        }
+                                        @let isAct = false
+                                        Container {
+                                            @for (node, i) in tree.depthPathNodes {
+                                                @if(node.nodeName === l.leaf.data.name){
+                                                    @expr isAct = node.depthName === state.aid
+                                                } 
+                                            }
+                                        }     
+                                        Container {
+                                            anchor =  l.tree.leafAnchor(l.leaf)
+                                            x = isRH ? -(r * 8) : (r * 8)
+                                            Arc {
+                                                x1 = isRH ? 90 - w / 2 : 270 - w / 2
+                                                x2 = isRH ? 90 + w / 2 : 270 + w / 2
+                                                r1 = r * 8
+                                                r2 = r * 8 + tree.dataOpt.maxLength + 10
+                                                fill = tree.dataOpt.color.get( (Math.log2(value + 1) / Math.log2(tree.dataOpt.Abundance + 1)))
+                                                // fill = tree.dataOpt.color.get( (Math.log2(value) / Math.log2(tree.dataOpt.Abundance)))
+                                                // fill = tree.dataOpt.color.get( value / tree.dataOpt.Abundance )
+                                                behavior:tooltip {
+                                                    content = path + "Abundance: " + value + "%"
+                                                }
+                                                stroke = isAct ? "red" : "none"
+                                            }   
+                                        }
+                                        Text {
+                                            x = isRH ? 5 : -5
+                                            anchor =  l.tree.leafAnchor(l.leaf)
+                                            text = l.leaf.data.name
+                                            fill = isMax ? "White" : "black"
+                                            behavior:tooltip {
+                                                content = path + "Abundance: " + value + "%"
+                                            }
+                                        } 
+                                        @props prop.opt.leaf
+                                        on:click = window.open("https://www.ncbi.nlm.nih.gov/taxonomy/" + id)
+                                        cursor = "pointer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    :link(l){
+                        Component {
+                            @let isMaxLink = 0
+                            Container {
+                                @for (node, i) in tree.maxLinkNodes.pathNodes {
+                                    @if(node.data.name === l.link.target.data.name){
+                                        @expr isMaxLink = 1
+                                    }
+                                }
+                            }
+                            @let color = null
+                            Container {
+                                @for (node, i) in tree.colorNodes {
+                                    @if(node.nodeName === l.link.source.data.name){
+                                        @expr color = node.color 
+                                    }
+                                }
+                            }
+                            @let isAct = false
+                            Container {
+                                @for (node, i) in tree.depthPathNodes {
+                                    @if(node.nodeName === l.link.source.data.name){
+                                        @expr isAct = node.depthName === state.aid
+                                    } 
+                                }
+                            }
+                            @let isActive = l.tree.isActiveLink(l.link)
+                            Path {
+                                stroke = isActive ? "red" : (isMaxLink ? "blue" : color)
+                                strokeWidth = isAct ? 6 :isMaxLink ? 5 : (isActive ? 5 : 3)
+                                fill = "none"
+                                d = l.tree.getPath(...l.pos)
+                                @props isActive ? prop.opt.activeLink : prop.opt.link
+                            }
+                        }
+                    }
+                }
+                Component {
+                    x = radius * 2 + 80
+                    y = radius / 2
+                    Component {
+                        y = 20 
+                        width = 300
+                        Text {
+                            y = -5
+                            text = "Leaf Relative Abundance (%)"
+                            fontSize = 15
+                            style:font-weight = "bold"
+                        }
+                        Rect {
+                            y = 20
+                            height = 30
+                            width = 300
+                            fill = @gradient("colorScale")
+                        }
+                        Axis {
+                            y = 50
+                            orientation = "bottom"
+                            xScale = @scaleLog(0, Math.ceil(parseFloat(tree.dataOpt.Abundance)), 0, 300)
+                        }
+                    }
+                    Component {
+                        y = 150
+                        width = 200
+                        Text {
+                            y = - 35
+                            fontSize = 15
+                            style:font-weight="bold"
+                            text = "Node Relative Abundance (%)"
+                        }
+                        @for i in 5 {
+                            Circle {
+                                x = i * 40 + 8
+                                r = (i === 4) ? Math.log2(tree.dataOpt.nodeAbundance + 1) + 4 : Math.log2(0.01 * Math.pow(10, i) + 1) + 4
+                                anchor = @anchor("m","l")
+                            }
+                            Text {
+                                x = i * 40 + (Math.log2(0.01 * Math.pow(10, i) + 1) + 4) + 8
+                                y = 20
+                                text = (i === 4) ? tree.dataOpt.nodeAbundance : 0.01 * Math.pow(10, i)
+                                anchor = @anchor("m","c")
+                            }
+                        }
+                    }
+                    Component {
+                        y = 230
+                        Text {
+                            y = -25
+                            fontSize = 15
+                            style:font-weight="bold"
+                            text = "Taxonomy Level (" + tree.dataOpt.classficationRank + ")"
+                        }
+                        @for (node, i) in tree.depthNodesLegend {
+                            Circle {
+                                r = 5
+                                x = node.x
+                                y = node.y
+                                fill = node.color
+                                //on:mouseenter = setActive(node.name)
+                                //on:mouseleave = setActive(null)
+                            }
+                            Text {
+                                x = node.x + 15
+                                y = node.y
+                                text = node.name
+                                //on:mouseenter = setActive(node.name)
+                                //on:mouseleave = setActive(null)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @else{
+            Component{
+                y = 20
+                x = 25     
+                @let barWidth = 300
+                @let width = 1000
+                @let lSize = parseFloat(tree.dataOpt.maxLength) + 25 + 5 + barWidth + 50
+                @let w = (width - lSize) / 8
+                Text {
+                    x = 0
+                    text = "R"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Root"
+                    }
+                }
+                Text {
+                    x = w
+                    text = "D"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Domain"
+                    }
+                }
+                Text {
+                    x = 2*w
+                    text = "K"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Kingdom"
+                    }
+                }
+                Text {
+                    x = 3*w
+                    text = "P"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Phylum"
+                    }
+                }
+                Text {
+                    x = 4*w
+                    text = "C"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Class"
+                    }
+                }
+                Text {
+                    x = 5*w
+                    text = "O"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Order"
+                    }
+                }
+                Text {
+                    x = 6*w
+                    text = "F"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Family"
+                    }
+                }
+                Text {
+                    x = 7*w
+                    text = "G"
+                    anchor = @anchor("middle","center")
+                    behavior:tooltip {
+                        content = "Genus"
+                    }
+                }
+                @for i in 8 {
+                    Line {
+					    x1 = i * w; y1 = 10
+					    x2 = i * w; y2 = tree.dataOpt.treeHeight + 5
+                        stroke = "#aaa"
+                        strokeWidth = 8
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 5
+                        stage:active {
+                            stroke = "#aaa"
+                            strokeOpacity = "0.8"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                }
+                Tree {
+                    y = 10
+                    ref = "tree"
+                    width = width; height = tree.dataOpt.treeHeight
+                    direction = "right"
+                    //Sscale = "scale"
+                    //linkStyle = "straight"
+                    data = tree.newickData
+                    leafSize = lSize
+                    link.strokeWidth = 2
+                    activeLink.stroke = "red"
+                    activeLink.strokeWidth = 5
+                    :node(n){
+                        Component{ 
+                            @let id = tree.data_dict[n.node.data.name] ? tree.data_dict[n.node.data.name].id : 2
+                            @let value = tree.data_dict[n.node.data.name] ? parseFloat(tree.data_dict[n.node.data.name].Abundance) : 0
+                            @let color = null;
+                            Container {
+                                @for (node, i) in tree.colorNodes {
+                                    @if(node.nodeName === n.node.data.name){
+                                        @expr color = node.color 
+                                    }
+                                }
+                            }
+                            Circle.centered{
+                                r =  Math.log2(value + 1) + 4
+                                fill = color
+                                behavior:tooltip {
+                                    content = n.node.data.name
+                                }
+                                @props prop.opt.node
+                            }
+                            on:click = window.open("https://www.ncbi.nlm.nih.gov/taxonomy/" + id, "_blank")
+                            cursor = "pointer"
+                        }
+                    }
+                    :leaf(l){
+                        Container{
+                            x = 5
+                            y = tree.dataOpt.maxHeight / 2
+                            @let id = tree.data_dict[l.leaf.data.name] ? tree.data_dict[l.leaf.data.name].id : 2
+                            @let value = tree.data_dict[l.leaf.data.name] ? parseFloat(tree.data_dict[l.leaf.data.name].Abundance) : 0
+                            @let path = ""
+                            @for (leaf, i) in tree.path {
+                                @if leaf.leafName === l.leaf.data.name {
+                                    @expr path = leaf.linkNodes
+                                }
+                            }
+                            @let color = null;
+                            @for (nodes, i) in tree.colorNodes {
+                                @if (l.leaf.parent.data.name === nodes.nodeName) {
+                                    @expr color = nodes.color
+                                }
+                            }
+                            anchor = l.tree.leafAnchor(l.leaf)
+                            Rect {
+                                width = tree.dataOpt.maxLength
+                                heigth = tree.dataOpt.treeHeight / tree.leaves.length 
+                                y = (tree.dataOpt.treeHeight / tree.leaves.length - 10) / 4
+                                anchor = @anchor("m","l")
+                                fill = color
+                                fillOpacity = 0.1
+                                behavior:tooltip {
+                                    content = path
+                                }
+                            }
+                            Text {
+                                text = l.leaf.data.name
+                                behavior:tooltip {
+                                    content = path
+                                }
+                            }
+                            Rect {
+                                x = tree.dataOpt.maxLength + 10
+                                y = (tree.dataOpt.treeHeight / tree.leaves.length - 10) / 4
+                                anchor = @anchor("m","l")
+                                width = (Math.log10(parseFloat(value) + 1) / Math.log10(parseFloat(tree.dataOpt.Abundance) + 1)) * barWidth
+                                heigth = tree.dataOpt.treeHeight / tree.leaves.length - 10
+                                fill = color
+                                behavior:tooltip {
+                                    content = "Abundance: " + value + "%"
+                                }
+                            }
+                            @props prop.opt.leaf
+                            on:click = window.open("https://www.ncbi.nlm.nih.gov/taxonomy/" + id, "_blank")
+                            cursor = "pointer"
+                        }
+                    }
+                    :link(l){
+                        Component {
+                            @let isMaxLink = 0
+                            Container {
+                                @for (node, i) in tree.maxLinkNodes.pathNodes {
+                                    @if(node.data.name === l.link.target.data.name){
+                                        @expr isMaxLink = 1
+                                    }
+                                }
+                            }
+                            @let color = null
+                            Container {
+                                @for (node, i) in tree.colorNodes {
+                                    @if(node.nodeName === l.link.source.data.name){
+                                        @expr color = node.color 
+                                    }
+                                }
+                            }
+                            @let isActive = l.tree.isActiveLink(l.link)
+                            Path {
+                                stroke = isActive ? "red" : (isMaxLink ? "blue" : color)
+                                strokeWidth = isMaxLink ? 5 : (isActive ? 5 : 3)
+                                fill = "none"
+                                d = l.tree.getPath(...l.pos)
+                                @props isActive ? prop.opt.activeLink : prop.opt.link
+                            }
+                        }
+                    }
+                }
+                Component {
+                    width = barWidth
+                    Axis {
+                        x = 8 * w + tree.dataOpt.maxLength + 15
+                        y = 18 - (tree.dataOpt.treeHeight / tree.leaves.length - 10) * 0.75
+                        orientation = "top"
+                        xScale = @scaleLog(0,  Math.ceil(parseFloat(tree.dataOpt.Abundance)), 0, barWidth)
+                    }
+                    Text {
+                        x = 8 * w + tree.dataOpt.maxLength + 15 
+                        y = -20
+                        text = "Abundance (%)"
+                    }
+                }
+            }
+            Component {
+                x = 1000
+                y = 0
+                Component {
+                    y = 50
+                    width = 200
+                    Text {
+                        y = - 35
+                        fontSize = 15
+                        style:font-weight="bold"
+                        text = "Node Relative Abundance (%)"
+                    }
+                    @for i in 5 {
+                        Circle {
+                            x = i * 40 + 8
+                            r = (i === 4) ? Math.log2(tree.dataOpt.nodeAbundance + 1) + 4 : Math.log2(0.01 * Math.pow(10, i) + 1) + 4
+                            anchor = @anchor("m","l")
+                        }
+                        Text {
+                            x = i * 40 + (Math.log2(0.01 * Math.pow(10, i) + 1) + 4) + 8
+                            y = 20
+                            text = (i === 4) ? tree.dataOpt.nodeAbundance : 0.01 * Math.pow(10, i)
+                            anchor = @anchor("m","c")
+                        }
+                    }
+                }
+                Component {
+                    y = 130 
+                    Text {
+                        y = -25
+                        fontSize = 15
+                        style:font-weight="bold"
+                        text = "Categories (" + tree.dataOpt.classficationRank + ")"
+                    }
+                    @for (node, i) in tree.depthNodesLegend {
+                        Circle {
+                            r = 5
+                            x = node.x
+                            y = node.y
+                            fill = node.color
+                        }
+                        Text {
+                            x = node.x + 15
+                            y = node.y
+                            text = node.name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

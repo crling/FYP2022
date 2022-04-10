@@ -1,0 +1,58 @@
+svg {
+    Component {
+        x = 50; y = 50
+        SignedHeatMap {
+            data = corrHeatmapData.data
+            gridW = 30
+            gridH = config.gridH
+            columns = corrHeatmapData.columns
+            rows = corrHeatmapData.rows
+            startColor = colors.origin
+            positiveEndColor = colors["positive range"]
+            negativeEndColor = colors["negative range"]
+            
+            dataRange = [config.rangeMin, config.rangeMax]
+            symRange = false
+            showPAnno = false
+                
+            // :groupLegend {
+            //     @if groupData {
+            //         Rows { // legend area
+            //             width = 150
+            //             Component {
+            //                 height = 20
+            //                 Text {
+            //                     text = "Taxa"
+            //                 }
+            //             }
+            //             @for p in Object.keys(phylums) {
+            //                 Rows {
+            //                     Component {
+            //                         height = 20
+            //                         Text {
+            //                             y = 5
+            //                             text = p
+            //                         }
+            //                     }
+            //                     @for g in phylums[p] {
+            //                         Component {
+            //                             height = 10
+            //                             Rect {
+            //                                 width = 20; height = 10
+            //                                 fill = familyColorMap[p][g]
+            //                             }
+            //                             Text {
+            //                                 x = 22
+            //                                 text = g
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+
+            //         }
+            //     }
+            // }
+        }
+    }
+}

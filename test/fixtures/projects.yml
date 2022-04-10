@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project_id: MyString
+  project_id1: MyString
+  project_id2: MyString
+  original_description: MyText
+  curated_description: MyText
+  num_of_samples: 1
+  num_of_runs: 1
+  population: 1
+  related_publications: MyText
+
+two:
+  project_id: MyString
+  project_id1: MyString
+  project_id2: MyString
+  original_description: MyText
+  curated_description: MyText
+  num_of_samples: 1
+  num_of_runs: 1
+  population: 1
+  related_publications: MyText

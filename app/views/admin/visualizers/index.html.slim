@@ -1,0 +1,29 @@
+- content_for :title
+  | Admin::Visualizers
+
+.container
+  =render 'partials/admin_navbar'  
+  .card
+    .card-body
+      h2.card-title Visualizers
+      .btn-toolbar.justify-content-end.mb-3 role="toolbar"
+        .btn-group.mr-3 role="group"
+          = link_to new_admin_visualizer_path, class: 'btn btn-secondary' do
+            = icon 'fas', 'plus'
+            | Add Visualizer
+    ul.sortable-list.list-group.list-group-flush
+      - @visualizers.each do |v|
+        li.list-group-item.justify-content-between.d-flex data-id="#{v.id}"
+          div
+            = icon 'fa', 'bars'
+            = "#{v.name}"
+            span.text-muted.ml-2
+              em ="(#{v.js_module_name})"
+          div
+            .btn-group.mr-2
+              = link_to edit_admin_visualizer_path(v), class: 'btn btn-sm btn-secondary' do
+                = icon 'fas', 'edit'
+                | Edit
+            = link_to admin_visualizer_path(v), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure?"} do
+              = icon 'fas', 'trash'
+              | Delete

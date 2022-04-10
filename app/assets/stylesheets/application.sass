@@ -1,0 +1,116 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ */
+    
+html, body
+    font-size: 14px
+
+.fa, .fas, .far, .fab
+    margin-right: 0.5em
+
+@import "partials/bootstrap-ex"
+@import "font-awesome-sprockets"
+@import "font-awesome"
+
+// .index-banner
+//     color: $gray-100
+//     background: image-url("texture-1.jpg")
+//     background-size: cover
+//     padding: 8rem 0
+//     &.sm
+//         padding: 3rem 0
+//     .lead
+//         width: 75%
+#user-setting:hover .tooltiptext 
+    opacity: 1
+
+.tooltiptext
+    opacity: 0
+    transition: opacity 0.5s
+    width: 10rem
+    background-color: black
+    color: #fff
+    text-align: center
+    padding: 0.2rem 0
+    margin: 25px 0
+    border-radius: 6px    
+    position: absolute
+    z-index: 10
+
+#wrapper
+    min-height: calc(100vh - 70px - 250px)
+#disable-fill
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    opacity: 0.3
+    background: black
+    z-index: 10
+    display: none
+
+a.no-link:hover
+    text-decoration: none
+
+.clickable
+    cursor: pointer
+
+.btn-doap
+    border-radius: 10rem !important
+
+.btn-xlg
+    padding: 1rem 1.75rem
+    font-size: .85rem
+
+.btn-vivid-shadow
+    &.btn-primary
+        box-shadow: 0 0 24px transparentize($primary, .6)
+    &.btn-secondary
+        box-shadow: 0 0 24px transparentize($secondary, .6)
+    &.btn-success
+        box-shadow: 0 0 24px transparentize($success, .6)
+    &.btn-warning
+        box-shadow: 0 0 24px transparentize($warning, .6)
+    &.btn-info
+        box-shadow: 0 0 24px transparentize($info, .6)
+    &.btn-danger
+        box-shadow: 0 0 24px transparentize($danger, .6)
+
+#alerts
+    position: relative
+    z-index: 1000
+    .global-alert
+        margin: 0
+        border-radius: 0
+    .progress-bar
+        transition: width 5s linear
+
+$nav-height: 70px
+#topbar
+    background-color: $gray-900
+    height: $nav-height
+    span
+        color: white
+    .nav-link
+        padding: 1rem 1rem
+        color: white
+    .dropdown-menu
+        box-shadow: 0 0 8px rgba(0,0,0,.1)
+    .dropdown-toggle
+        &::after
+            content: none
+        .fa, .fas
+            margin: 0 0 0 .25rem
+
+@import "./*"

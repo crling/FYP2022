@@ -1,0 +1,61 @@
+svg {
+    width = 1600; height = 1100;
+    Container{
+        NetworkDiagram {
+            x = 50; y = 50
+            _links = networkEdges
+            _nodes = networkNodes
+            _phylums = phylums
+            colorMap = nodeColorMap
+            showNodeNames = config.showNodeNames
+        }
+
+        
+        
+        Container {
+
+            x = 50; y = 800; width = 1000; height = 240;
+            Rect.full {
+                stroke = "black"
+                strokeWidth = 2
+                fill = "white"
+            }
+            @let _x = 10;
+            @let _y = -10;
+            Component {
+                @for k in Object.keys(phylums) {
+                    @expr _x = _y + 45 > 220 ? _x + 200 : _x
+                    @expr _y = _y + 45 > 220 ? 15 : _y + 25
+                    Text {
+                        x = _x; y = _y
+                        text = k
+                        style:font-style = "italic"
+                        style:font-weight = "bold"
+                        anchor = @anchor("l", "m")
+                        fontSize = 18
+                    }
+
+                    @for genus in phylums[k] {
+                        @expr _x = _y + 25 > 220 ? _x + 200 : _x
+                        @expr _y = _y + 25 > 220 ? 15 : _y + 20
+                        Rect {
+                            x = _x + 5; y = _y
+                            width = 12; height = 12
+                            fill = nodeColorMap[k][genus]
+                            anchor = @anchor("l", "m")
+                            stroke = "black"
+                        }
+                        Text {
+                            x = _x + 20; y = _y
+                            text = genus
+                            anchor = @anchor("l", "m")
+                            fontSize = 15
+                        }
+                    }            
+                }
+            }
+        }
+        
+    }
+    
+}

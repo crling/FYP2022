@@ -1,0 +1,169 @@
+GridPlot {
+    @props prop
+    :content {
+        @if prop.drawBox{    
+            @if prop.flip {
+                Boxes {
+                    static = true
+                    data = "boxData"
+                    showMean = true
+                    showNotch = false
+                    :box (_d) {
+                        Rect.full  {
+                            @let boxColors = getBoxColors(getColor(_d.pos))
+                            fill = boxColors[1]
+                            stroke = boxColors[0]
+                            behavior:tooltip {
+                                content = (`min: ${_d.data[0].toFixed(2)} <br>
+                                            first quartile: ${_d.data[1].toFixed(2)} <br>
+                                            median: ${_d.data[2].toFixed(2)} <br>
+                                            third quartile: ${_d.data[3].toFixed(2)} <br>
+                                            max: ${_d.data[4].toFixed(2)} <br>`)
+                            }
+                            y = 20%
+                            height = 60%
+                        }
+                    }
+                    :whiskle (d) {
+                        Component.full {
+                            @let boxColors = getBoxColors(getColor(d.pos))
+                            // width = 100%
+                            Line { 
+                                y = 50%; x2 = 100%; dashArray = "4,1"
+                                stroke = boxColors[0]; strokeWidth = 2
+                            }
+                            Line { y1 = 41.25%; y2 = 57.75%; x = 0; stroke = boxColors[0] }
+                            Line { y1 = 41.25%; y2 = 57.75%; x = 100%; stroke = boxColors[0] }
+                        }
+                        
+                    }
+                    :outlier(d){
+                        Circle.centered {
+                            @let boxColors = getBoxColors(getColor(d[0]))
+                            r = 2; stroke = boxColors[0]; visible = prop.showOutliers; fill = "none"
+                        }
+                    }
+                    :mean(d) {
+                        Line {
+                            @let boxColors = getBoxColors(getColor(d.pos))
+                            y1 = 20%; y2 = 80%; stroke = boxColors[2]; strokeWidth = 2
+                        }
+                    }
+                    :median {
+                        Line {
+                            x1 = 20%; x2 = 80%; stroke = "#666"; strokeWidth = 2; dashArray = "2, 2"
+                        }
+                    }
+                }
+            } @else {
+                Boxes {
+                    static = true
+                    data = "boxData"
+                    showMean = true
+                    showNotch = false
+                    :box (_d) {
+                        Rect.full  {
+                            @let boxColors = getBoxColors(getColor(_d.pos))
+                            fill = boxColors[1]
+                            stroke = boxColors[0]
+                            behavior:tooltip {
+                                content = (`min: ${_d.data[0].toFixed(2)} <br>
+                                            first quartile: ${_d.data[1].toFixed(2)} <br>
+                                            median: ${_d.data[2].toFixed(2)} <br>
+                                            third quartile: ${_d.data[3].toFixed(2)} <br>
+                                            max: ${_d.data[4].toFixed(2)} <br>`)
+                            }
+                            x = 20%
+                            width = 60%
+                        }
+                    }
+                    :whiskle (d) {
+                        Component {
+                            @let boxColors = getBoxColors(getColor(d.pos))
+                            height = 100%
+                            Line { 
+                                x = 50%; y2 = 100%
+                                stroke = boxColors[0]; strokeWidth = 1
+                                dashArray = "4,1"
+                            }
+                            Line { x1 = 41.25%; x2 = 57.75%; y = 0; stroke = "#000" }
+                            Line { x1 = 41.25%; x2 = 57.75%; y = 100%; stroke = "#000" }
+                        }
+                        
+                    }
+                    :outlier(d){
+                        Circle.centered {
+                            @let boxColors = getBoxColors(getColor(d[0]))
+                            r = 2; stroke = boxColors[0]; visible = prop.showOutliers; fill = "none"
+                        }
+                    }
+                    :mean(d) {
+                        Line {
+                            @let boxColors = getBoxColors(getColor(d.pos))
+                            x1 = 20%; x2 = 80%; stroke = "black"; strokeWidth = 2
+                        }
+                    }
+                    :median {
+                        Line {
+                            x1 = 20%; x2 = 80%; stroke = "#666"; strokeWidth = 2; dashArray = "2, 2"
+                        }
+                    }
+                } 
+            }
+        }
+        @if prop.drawViolin {
+            Violins {
+                static = true
+                data = "violinData"
+                dataLine = false
+                quartile = false
+                extremeLine = false
+                basisCurve = true
+                violinOptions.stroke = "none"
+                @props violinFillProps
+            }
+        }
+        @if prop.drawScatter {
+            Scatters1D {
+                static = true
+                data = "scatterData"
+                :children(d) {
+                    Circle.centered {
+                        r = 2
+                        fill = getScatterColor(d.pos)
+                    }
+                }
+            }
+        }
+        @if prop.pData && prop.drawP {
+        Component { 
+            y = @scaled-y(boxMax)  + offsetY
+            behavior:drag {
+                direction = "y"
+                onDrag = @bind(dragP)
+            }
+             @for pair in prop.pData {
+                Container {
+                
+                    @let sourceX = @scaled-x(pair.sourcePos) + (pair.sourcePos === 1 ? 5 : 0)
+                    @let targetX =  @scaled-x(pair.targetPos) + (pair.targetPos === 1 ? -5 : 0)
+                    y = ((pair.targetPos - pair.sourcePos) > 1 ? -40: -20)
+                    Line {
+                        x = sourceX; y2 = 10
+                    }
+                    Line {
+                        x = targetX; y2 = 10
+                    }
+                    Line {
+                        x1 = sourceX; x2 = targetX;
+                    }
+                    Text {
+                        x = (targetX + sourceX)/2; y = -2; anchor = @anchor("c", "b")
+                        text = pair.pValue < 0.001 ? "p < 0.001" : `p = ${pair.pValue.toFixed(3)}`
+                    }
+                }
+            }
+        }
+        }
+    }
+}

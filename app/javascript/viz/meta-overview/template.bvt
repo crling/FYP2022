@@ -1,0 +1,451 @@
+
+Component {
+    @let offsetY = 2 * sizeSettings.gapY + sizeSettings.barHeight
+    @let displayW = fullDisplay ? mainWidth : sizeSettings.mainWidth
+    @let displayH = fullDisplay ? mainHeight : sizeSettings.mainHeight
+    @let showBoxplot = gridH > 10
+    @let strokeProps = {
+        stroke: "white",
+        strokeWidth: 0.4,
+    }
+    // stacked bar
+    XYPlot {
+        static = true
+        discreteCategory = true
+        x = offsetX; y = sizeSettings.gapY
+        width = mainWidth
+        height = sizeSettings.barHeight
+        data = hist.result
+        stackedData = {
+            stacked: hist.indexes
+        }
+        // gap = 1
+        padding = 0
+        gap = 0.4
+        StackedBars {
+            data = "stacked" 
+            :children(d) {
+                Rect {
+                    width = 100%; height = @geo(100, 1)
+                    fill = hist.colorMap[d.key]
+                    on:mouseenter = setActive(d.data.data[0])
+                    on:mouseleave = setActive(null)
+                    behavior:tooltip {
+                        content = `sample ID: ${d.data.data[0]}<br>species: ${d.key}<br> relative abundance: ${d.data.data[1]}%`
+                    }
+                    stroke = "none"
+                }
+            }
+            width = 100%
+            height = 100%
+            // stroke = "#fff"
+            stroke = "none"
+            fill = "none"
+        }
+    }
+
+    //main area
+    Component {
+        height = displayH + 15
+        clip = @clip("bound"); y = offsetY
+        Component {
+            y = yPos
+            height = mainHeight
+            static = true
+            Tree { //left side tree
+                height = mainHeight
+                width = offsetX
+                x = sizeSettings.padding
+                data = ovTree
+                direction = "right"
+                link.stroke = "#000"
+                :leaf {
+                    Component{}
+                }
+                :node {
+                    Component{}
+                }
+            }
+
+            Component {
+                static = true
+                x = offsetX
+                @for (r, i) in mainHeatmap {
+                    @for (sample, j) in r {
+                        Rect {
+                            key = `main-${i}-${j}`
+                            height = gridH; width = gridW; x = gridW * j; y = gridH * i
+                            fill = mainColorGetter(sample)
+                            @props strokeProps
+                            on:mouseenter = setActive(gridW * j + offsetX, gridH * i + offsetY)
+                            on:mouseleave = setActive(null, null)
+                            behavior:tooltip {
+                                content = `sample: ${filteredSamples[j]}<br>species: ${species[i]}<br>relative abundance: ${sample.toExponential(2)}`
+                            }
+                        }
+                    }
+                }
+            }
+        //boxplot 
+        @if showBoxplot {
+            Component {
+                static = true
+                x = offsetX + displayW + sizeSettings.gapX
+                width = sizeSettings.boxHeight
+                XYPlot {
+                    valueRange = boxplot.valueRange
+                    invertValueAxis = true
+                    height = displayH
+                    width = sizeSettings.boxHeight
+                    flip = true
+                    data = {
+                        boxData1: boxplot.boxData[0],
+                        boxData2: boxplot.boxData[1]
+                    }
+                    Rect{
+                        width = 100%
+                        height = 100%
+                        fill = "none"
+                    }
+                    @for (item, index) in boxplot.boxData{
+                        Boxes {
+                            static = true
+                            @let color = index === 0 ? colors.control : colors.gout
+                            key = index
+                            data = "boxData" + (index + 1).toString()
+                            showMean = true
+                            showNotch = false
+                            y = -gridH/6 + gridH * index /3
+                            :box (_d) {
+                                Rect.full  {
+                                    fill = "#fff"
+                                    stroke = color
+                                    behavior:tooltip {
+                                        content = (`min: ${_d.data[0].toExponential(2)} <br>
+                                                    first quartile: ${_d.data[1].toExponential(2)} <br>
+                                                    median: ${_d.data[2].toExponential(2)} <br>
+                                                    third quartile: ${_d.data[3].toExponential(2)} <br>
+                                                    max: ${_d.data[4].toExponential(2)} <br>`)
+                                    }
+                                    y = 33%
+                                    height = 33%
+                                }
+                            }
+                            :whiskle (d) {
+                                Line { x2 = 100%; y = 50%; stroke = color;
+                                }
+                            }
+                            :outlier{
+                                Circle.centered { r = 1.5; fill = color }
+                            }
+                            :mean(means) {
+                                Line {y1 = 33%; y2 = 66%; stroke = color}
+                            }
+                            :median(d) {}
+                        }
+                    }
+                    Axis("bottom"){
+                        y = 100%
+                    }
+
+                }
+	        }
+        }
+        }
+    }
+    
+    Component { //meta area
+        y = offsetY + displayH
+        Text {
+            static = true
+            anchor = @anchor("t", "c");  y = 2
+            x = offsetX + displayW / 2; text = "Meta data"
+        }
+
+        Component {
+            static = true
+            y = sizeSettings.padding
+            Rows {
+                @for (f, i) in metaFeatures {
+                    @if !!metaInfo[f] {
+                        Component {
+                        height = 12
+                        Component { // legend area
+                            x = 10; height = 100%
+                            Columns {
+                                Component {
+                                    width = 20
+                                    Rect {
+                                        height = 11; width = 18; fill = colors.na
+                                    }
+                                    Line {
+                                        x2 = 20; y1 = 11; stroke = "red" 
+                                    }
+                                    Text("NA") {
+                                        fontSize = 11; anchor = @anchor("t", "c"); x = 10; fill = "#000"
+                                    }
+                                }
+                                @if !metaInfo[f].useNumber {
+                                    @let rectW = (offsetX - 15 - 20) / metaInfo[f].values.length 
+                                @for (cat, j) in metaInfo[f].values {
+                                    Component {
+                                        width = rectW
+                                        Rect {
+                                            height = 11; width = rectW - 2
+                                            fill = metaInfo[f].color(cat)
+                                        }
+                                        @if (rectW > 20) {
+                                            Text {
+                                                x = 50%; anchor = @anchor("t", "c")
+                                                fill = "#000"; text = cat; fontSize = 10
+                                            }
+                                        }
+                                    }
+                                }
+                                } @else {
+                                    Component {
+                                    @let div = (metaInfo[f].rangeMax - metaInfo[f].rangeMin) / 20
+                                    @let rectW = (offsetX - 15 - 20) / 20
+                                    @for i in 20 {
+                                        Rect {
+                                            height = 11; width = rectW; x = rectW * i
+                                            fill = metaInfo[f].color(metaInfo[f].rangeMin + i * div)
+                                        }
+                                    }
+                                    Text(metaInfo[f].rangeMin) {
+                                        anchor = @anchor("l", "t"); x = 2; fill = "#000"
+                                    }
+                                    Text(metaInfo[f].rangeMax) {
+                                        anchor = @anchor("right", "top"); x = offsetX - 17 - 20; fill = "#000"
+                                    }
+                                    }
+                                }
+                                
+                            }
+                        }
+                        Component {
+                            x = offsetX; height = 100%
+                        @for (d, j) in metaData[f] {
+                            Component {
+                                height = 100%; width = 100%
+                                on:mouseenter = setActive(gridW * j + offsetX, null)
+                                on:mouseleave = setActive(null, null)
+                                behavior:tooltip {
+                                    content = `sample: ${filteredSamples[j]}<br>${f}: ${d}`
+                                }
+                                @let metaFill = metaInfo[f].color(d)
+                            @if !!metaFill {
+                                Rect {
+                                    height = 100%; width = gridW; x = gridW * j; fill = metaFill
+                                    @props strokeProps
+                                }
+                            } @else {
+                                Rect {
+                                    height = 100%; width = gridW; x = gridW * j; fill = colors.na
+                                    @props strokeProps
+                                }
+                                Line {
+                                    x1 = gridW * j; x2 = gridW * j + gridW; y1 = 95%; y2 = 0; stroke = "red"
+                                }
+                            }
+                            }
+                            
+                            
+                        }
+                        }
+                        Text(f) {
+                            x = offsetX + gridW * filteredSamples.length + 5; y = 6; anchor = @anchor("m", "l"); fontSize = 11
+                        }
+                    }
+                    }
+                    
+                }  
+            }
+        }
+    }
+
+    // Component { //debug plot
+    //     y = offsetY + displayH + 80; x = 0
+    //     height = 200
+    //     @let pos = 0
+    //     // @expr console.log(debug.data.length)
+    //     @for value in debug.data {
+            
+    //         Circle.centered {
+    //             @expr pos +=2
+    //             x = pos; y = 200 - debug.scale1(value[0])
+    //             r = 1; fill = "green"
+    //         }
+    //         Circle.centered {
+    //             x = pos; y = 200 - debug.scale2(value[1])
+    //             r = 1; fill = "blue"
+    //         }
+    //     }
+    //     Line {
+    //         x = offsetX + displayW + sizeSettings.gapX + sizeSettings.boxHeight
+    //         y1 = 0; y2 = 200
+    //     }
+    //     Line {
+    //         x2 = offsetX + displayW + sizeSettings.gapX + sizeSettings.boxHeight
+    //         y = 200/7
+    //     }
+    // }
+    //legends
+    Component {
+        key = "histLegend"
+        // static = true;
+        height = 156; width = 200
+        behavior:drag {
+            onDrag = @bind(handleLegendPos)
+        }
+        @props histLegendPos
+        Rect.full {
+            fill = "#fff"; stroke = "#000"; strokeWidth = 0.5
+        }
+        Columns {
+            @for i in 2 {
+                Rows {
+                    width = 100
+                    @for j in 12 {
+                        @if (i * 12 + j < species.length) {
+                            Component {
+                                height = 13
+                                Rect {
+                                    height = 8; width = 6; x = 2; y = 2
+                                    fill = hist.colorMap[histLegendLabels[i * 12 + j][1]]
+                                }
+                                Text {
+                                    fontSize = 10; x = 10; y = 1
+                                    text = histLegendLabels[i * 12 + j][0]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Component {
+        key = "mainLegend"
+        x = mainLegendPos.x; y = mainLegendPos.y
+        // static = true
+        height = 50; width = 100
+        behavior:drag {
+            onDrag = @bind(handleLegendPos)
+        }
+        Rect.full {
+            strokeWidth = 0.5; fill = "#fff"; stroke = "#000"
+        }
+        Component {
+            Text("x = 0") {
+                fontSize = 10; anchor = @anchor("m", "r"); y = 10; x = 35
+            }
+            Rect {
+                fill = colors.abd0; anchor = @anchor("m", "l"); y = 10; x = 40; width = 10; height = 10
+            }
+            Text {
+                text = "log(x)"; y = 25
+                x = 35;  fontSize = 10; anchor = @anchor("r","m")
+            }
+            Text {
+                text = mainRange[0].toFixed(2); x = 40; y = 36; 
+                anchor = @anchor("c", "t"); fontSize = 10
+            }
+            Text {
+                text = mainRange[1].toFixed(2); x = 80; y = 36; 
+                anchor = @anchor("c", "t"); fontSize = 10
+            }
+            @for (f, i) in mainGradientFills {
+                Rect.centered {
+                    fill = f; y = 25
+                    x = 40 + i * 2; width = 2; height = 12
+                }
+            }
+        }
+    }
+    Component { // boxplot legend
+        key = "boxLegend"
+        x = boxLegendPos.x; y = boxLegendPos.y
+        height = 50; width = 70
+        anchor = @anchor("r", "t")
+        behavior:drag {
+            onDrag = @bind(handleLegendPos)
+        }
+        Rect.full {
+            stroke = "#000"; fill = "#fff"; strokWidth = 2
+        }
+        Rows {
+            @for (c, i) in boxplot.classifications {
+                Component {
+                    @let color = i === 0 ? colors.control : colors.gout
+                    height = 25
+                    Line {
+                        y1 = 4; y2 = 21; x = 10; stroke = color
+                    }
+                    Rect {
+                        x = 5; y = 8; height = 9; width = 10; fill = color
+                    }
+                    Text(c) {
+                        anchor = @anchor("l", "m"); fontSize = 10; x = 18; y = 12
+                    }
+                }
+            }
+        }
+    }
+
+    //highlight bar
+    @if state.activeX !== null {
+        Rect { // hist highlight
+            x = state.activeX; y = sizeSettings.gapY
+            width = gridW
+            height = sizeSettings.barHeight
+            stroke = "#000"
+            strokeWidth = 2
+            fill = "none"
+            events = "none"
+        }
+        Rect {
+            x = state.activeX; y = offsetY
+            width = gridW
+            height = displayH
+            stroke = "#000"
+            strokeWidth = 2
+            fill = "none"
+            events = "none"
+        }
+        Rect {
+            x = state.activeX; y = offsetY + displayH + sizeSettings.padding
+            width = gridW
+            height = 12 * metaFeatures.length
+            // stroke = @color("highlight")
+            stroke = "#000"
+            strokeWidth = 2
+            fill = "none"
+            events = "none"
+        }
+    }
+    @if state.activeY !== null {
+        Rect {
+            x = offsetX; y = state.activeY
+            width = gridW * filteredSamples.length
+            height =  mainHeight / species.length
+            // stroke = @color("highlight")
+            stroke = "#000"
+            strokeWidth = 2
+            fill = "none"
+            events = "none"
+        }
+        @if showBoxplot{
+            Rect {
+                x = offsetX + displayW + sizeSettings.gapX; y = state.activeY
+                width = sizeSettings.boxHeight; height = gridH
+                stroke = "#000"
+                strokeWidth = 2
+                fill = "none"
+                events = "none"
+            }
+        }
+    }
+    
+}

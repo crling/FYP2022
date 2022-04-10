@@ -1,0 +1,11 @@
+= f.input :url_name
+= f.input :folder
+= f.input :column_names
+= f.input :column_types
+= f.input :alias, as: :text, input_html: {value: f.object.alias_json, data: {'ace': true, 'ace-mode': 'json'}}
+= f.button :submit
+
+- content_for :page_script do
+  sass:
+    .ace_editor
+      height: 200px

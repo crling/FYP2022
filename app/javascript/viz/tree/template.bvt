@@ -1,0 +1,535 @@
+svg {
+    Component {
+        @if (tree.dataOpt.isRadical) {
+            @let radius = tree.dataOpt.treeRadius
+            @let maxTextW = Math.ceil(tree.dataOpt.maxTextLength)
+            @let legendW = 140
+            Tree {
+                y = radius + maxTextW
+                x = maxTextW 
+                r = radius
+                width = radius * 2
+                // height = 600
+                data = tree.treeData
+                direction = "radical"
+                link.on:mouseenter = $el.stage = "active"
+                link.on:mouseleave = $el.stage = null
+                deg = 350
+                // treeRotation = 90
+                :node(n){
+                    Component{
+                        //zIndex = 2
+                        Circle.centered{
+                            r =  (n.node.data.name === "r__Root") ? 5 : tree.mean_info_box[n.node.data.name] * 0.8
+                            fill = tree.library.color_dict.colorNodes[n.node.data.name]
+                            //fillOpacity = 0.8
+                            stroke = tree.library.color_dict.colorLinks[n.node.data.name]
+                            behavior:tooltip {
+                                content = n.node.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[n.node.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[n.node.data.name].qvalue
+                            }
+                            //@props prop.opt.node
+                        }
+                        //@if ()
+                    }
+                }
+                :leaf(l){
+                    Component{
+                        @let name = l.leaf.data.name.substring(3)
+                        Circle.centered{
+                            r = tree.mean_info_box[l.leaf.data.name] * 0.8
+                            fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                            stroke = tree.library.color_dict.colorLinks[l.leaf.data.name]
+                            behavior:tooltip {
+                                content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                            }
+                        }
+                        @if (tree.dataOpt.showAllNodeName) {
+                            Container {
+                                anchor = l.tree.leafAnchor(l.leaf)
+                                padding = 13
+                                Container {
+                                    padding = 2
+                                    @if (tree.dataOpt.showDistinctNodeName && l.leaf.data.data.qvalue < tree.dataOpt.maxQvalue) {
+                                        Rect.detached {
+                                            width = 100%; height = 100%
+                                            fill = "none"
+                                            stroke = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                            strokeWidth = 2; cornerRadius = 2
+                                        }
+                                    }
+                                    Text(name){
+                                        fill = tree.library.color_dict.colorLinks[l.leaf.data.name]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }  
+                :link(l){
+                    Component {
+                        @let isGroupLink = 0
+                        Container {
+                            @if(tree.library.matrix_dict[l.link.target.data.name].qvalue < tree.dataOpt.maxQvalue) {
+                                @if (tree.library.matrix_dict[l.link.target.data.name].enriched === tree.library.id_group.group1) {
+                                    @expr isGroupLink = 1
+                                } @elsif (tree.library.matrix_dict[l.link.target.data.name].enriched === tree.library.id_group.group2) {
+                                    @expr isGroupLink = 2
+                                }
+                            } 
+                        }
+                        @let isActive = l.tree.isActiveLink(l.link)
+                        Path {
+                            stroke = isActive ? "black" : (isGroupLink ? (isGroupLink === 1) ? 
+                                "red" : "blue" : (tree.library.color_dict.depthPathNodes[l.link.source.data.name]) ? 
+                                    tree.library.color_dict.colorLinks[tree.library.color_dict.depthPathNodes[l.link.source.data.name]] : "#444")
+
+                            strokeWidth = isGroupLink ? 3 : (isActive ? 3 : 2)
+                            fill = "none"
+                            d = l.tree.getPath(...l.pos)
+                           // @props isActive ? prop.opt.activeLink : prop.opt.link
+                        }
+                    }
+                }
+            }
+            Component {
+                // x = (tree.dataOpt.showDistinctNodeName) ? 800 : 800
+                x = 2 * (maxTextW + radius)
+                y = maxTextW - 50
+                Component {
+                    y = 25
+                    Text {
+                        fontSize = 14
+                        style:font-weight="bold"
+                        text = "Significant Different"
+                    }
+                    Component {
+                        y = 30
+                        Line {
+                            x1 = 5
+                            y = 0
+                            x2 = 70
+                            stroke = "red"
+                            strokeWidth = 6
+                        }
+                        Text.centered {
+                            x = 100
+                            y = -1
+                            text = tree.library.id_group.group1
+                            fontSize = 12
+                        }
+                    }
+                    Component {
+                        y = 45
+                        Line {
+                            x1 = 5
+                            y = 0
+                            x2 = 70
+                            stroke = "blue"
+                            strokeWidth = 6
+                        }
+                        Text.centered {
+                            x = 100
+                            y = -1
+                            text = tree.library.id_group.group2
+                            fontSize = 12
+                        }
+                    }
+                }
+                Component {
+                    y = 100
+                    Text {
+                        fontSize = 14
+                        text = "Relative Abundance"
+                        style:font-weight="bold"
+                    }
+                    Rows {
+                        y = 25
+                        @for i in 5 {
+                        Component {
+                            height = tree.max_mean * (5 - i) / 2.5 + 5
+                            Circle.centered {
+                                fill = "skyblue"
+                                x = tree.max_mean
+                                r = tree.max_mean * (5 - i) / 5 * 0.8
+                                y = tree.max_mean * (5 - i) / 5 * 0.8
+                            }
+                            Text.centered {
+                                x = tree.max_mean * 3
+                                y = tree.max_mean * (5 - i) / 5 * 0.8
+                                fontSize = 12
+                                text = Math.ceil((tree.max_mean * (5 - i) / 5)) + "%"
+                            }
+                        }
+                        }
+                    }
+                    
+                }
+                Component {
+                    y = 360
+                    Text {
+                        fontSize = 14
+                        style:font-weight="bold"
+                        text = tree.dataOpt.allRank[tree.dataOpt.treeDepth]
+                    }
+                    Component {
+                        y = 35; x = 5
+                        @for (node, i) in tree.library.color_dict.depthNodesLegend {
+                            Circle {
+                                r = 8
+                                x = node.x
+                                y = node.y
+                                fill = node.color
+                            }
+                            Text {
+                                x = node.x + 25
+                                y = node.y 
+                                text = node.name.substring(3)
+                                fontSize = 11
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @else {
+            Component {
+                x = 10 + tree.max_mean
+                y = 40
+                @let iter_num = tree.dataOpt.level + 1
+                @for i in iter_num {
+                    Text {
+                        x = i * 100
+                        text = tree.dataOpt.allRank[i]
+                        fontSize = 14
+                        anchor = @anchor("middle","center")
+                        behavior:tooltip {
+                            content = tree.dataOpt.allRank[i]
+                        }
+                    }
+                    Line {
+					    x1 = i * 100; y1 = 10
+					    x2 = i * 100; y2 = tree.leaves.length * 40 + 5
+                        stroke = "#aaa"
+                        strokeWidth = 8
+                        strokeOpacity = 0.4
+                        style:stroke-dasharray = 5
+                        stage:active {
+                            stroke = "#aaa"
+                            strokeOpacity = "0.8"
+                        }
+                        on:mouseenter = $el.stage = "active"
+                        on:mouseleave = $el.stage = null
+                    }
+                }
+            }
+            Tree {
+                x = 10 + tree.max_mean
+                y = 50
+                width = tree.dataOpt.level * 100 + tree.dataOpt.maxTextLength + tree.dataOpt.boxPlotLength
+                height = tree.leaves.length * 40
+                r = 300
+                data = tree.treeData
+                direction = "right"
+                leafSize = tree.dataOpt.boxPlotLength + tree.dataOpt.maxTextLength
+                link.on:mouseenter = $el.stage = "active"
+                link.on:mouseleave = $el.stage = null
+                branchShouldStayOnTop = branchShouldStayOnTop
+                :node(n){
+                    Component{
+                        zIndex = 2
+                        Circle.centered{
+                            // r =  6
+                            r = (n.node.data.name === "r__Root") ? tree.max_mean : tree.mean_info_box[n.node.data.name]
+                            fill = tree.library.color_dict.colorNodes[n.node.data.name]
+                            behavior:tooltip {
+                                content = n.node.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[n.node.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[n.node.data.name].qvalue
+                            }
+                            @props prop.opt.node
+                        }
+                    }
+                }
+                :leaf(l){
+                    Component{
+                        @if (tree.dataOpt.showAllNodeName) {
+                            @if (tree.library.matrix_dict[l.leaf.data.name].qvalue < tree.dataOpt.maxQvalue) {
+                                Circle.centered{
+                                    // r =  6
+                                    r = tree.mean_info_box[l.leaf.data.name]
+                                    fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                    behavior:tooltip {
+                                        content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                                Text {
+                                    x = tree.max_mean + 15
+                                    anchor =  l.tree.leafAnchor(l.leaf)
+                                    text = l.leaf.data.name.substring(3)
+                                    fontSize = 14
+                                    style:font-weight="bold"
+                                    behavior:tooltip {
+                                        content = 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                            } 
+                            @else {
+                                Circle.centered{
+                                    // r =  6
+                                    r = tree.mean_info_box[l.leaf.data.name]
+                                    fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                    behavior:tooltip {
+                                        content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                                Text {
+                                    x = tree.max_mean + 15
+                                    anchor =  l.tree.leafAnchor(l.leaf)
+                                    text = l.leaf.data.name.substring(3)
+                                    fontSize = 14
+                                    behavior:tooltip {
+                                        content = 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                            }
+                        } @elsif (tree.dataOpt.showDistinctNodeName) {
+                            @if (tree.library.matrix_dict[l.leaf.data.name].qvalue < tree.dataOpt.maxQvalue) {
+                                Circle.centered{
+                                    // r =  6
+                                    r = tree.mean_info_box[l.leaf.data.name]
+                                    fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                    behavior:tooltip {
+                                        content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                                Text {
+                                    x = tree.max_mean + 15
+                                    anchor =  l.tree.leafAnchor(l.leaf)
+                                    text = l.leaf.data.name.substring(3)
+                                    fontSize = 14
+                                    style:font-weight="bold"
+                                    behavior:tooltip {
+                                        content = 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                            } 
+                            @else {
+                                Circle.centered{
+                                    // r =  6
+                                    r = tree.mean_info_box[l.leaf.data.name]
+                                    fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                    behavior:tooltip {
+                                        content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                    }
+                                }
+                            }
+                        }
+                        @else {
+                            Circle.centered{
+                                // r =  6
+                                r = tree.mean_info_box[l.leaf.data.name]
+                                fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                                behavior:tooltip {
+                                    content = l.leaf.data.name.substring(3) + '<br>' + 'group: ' + tree.library.matrix_dict[l.leaf.data.name].enriched + '<br>' +  'q_value: ' + tree.library.matrix_dict[l.leaf.data.name].qvalue
+                                }
+                            }
+                        }
+                        @props prop.opt.leaf
+                    }
+                    Component {
+                        x = (tree.dataOpt.showAllNodeName || tree.dataOpt.showDistinctNodeName) ? tree.dataOpt.maxTextLength + 50 + tree.max_mean : 20 + tree.max_mean
+                        Rect.centered {
+                            x = -5
+                            height = 32
+                            width = tree.dataOpt.boxPlotLength + 15
+                            // fill = tree.library.color_dict.colorNodes[l.leaf.data.name]
+                            fill = "#aaa"
+                            fillOpacity = 0.1
+                            anchor = @anchor("m", "l")
+                        }
+                        Component {
+                            y = -tree.dataOpt.boxLegend
+                            @for outliner in tree.leave_box_dict[l.leaf.data.name].group1.outliners {
+                                Circle.centered {
+                                    x = outliner
+                                    r = 3
+                                    fill = "red"
+                                }
+                            }
+                            Rect.centered {
+                                x =  + tree.leave_box_dict[l.leaf.data.name].group1.q1
+                                width = tree.leave_box_dict[l.leaf.data.name].group1.q3 - tree.leave_box_dict[l.leaf.data.name].group1.q1
+                                height = 10
+                                anchor = @anchor("l", "m")
+                                stroke = "red"
+                                strokeWidth = 1.5
+                                fill = "none"
+                            }
+                            Line.centered {
+                                x1 = tree.leave_box_dict[l.leaf.data.name].group1.median
+                                y1 = -5
+                                x2 = tree.leave_box_dict[l.leaf.data.name].group1.median
+                                y2 = 5
+                                strokeWidth = 1.5
+                                stroke = "red"
+                            }
+                            Line.centered {
+                                x1 = tree.leave_box_dict[l.leaf.data.name].group1.min
+                                y1 = 0
+                                x2 = tree.leave_box_dict[l.leaf.data.name].group1.max
+                                y2 = 0
+                                strokeWidth = 1.5
+                                stroke = "red"
+                            }
+                        }
+                        Component {
+                            y = tree.dataOpt.boxLegend
+                            @for outliner in tree.leave_box_dict[l.leaf.data.name].group2.outliners {
+                                Circle.centered {
+                                    x = outliner
+                                    r = 3
+                                    fill = "blue"
+                                }
+                            }
+                            Rect.centered {
+                                x = tree.leave_box_dict[l.leaf.data.name].group2.q1
+                                width = tree.leave_box_dict[l.leaf.data.name].group2.q3 - tree.leave_box_dict[l.leaf.data.name].group2.q1
+                                height = 10
+                                anchor = @anchor("l", "m")
+                                stroke = "blue"
+                                strokeWidth = 1.5
+                                fill = "none"
+                            }
+                            Line.centered {
+                                x1 = tree.leave_box_dict[l.leaf.data.name].group2.median
+                                y1 = -5
+                                x2 = tree.leave_box_dict[l.leaf.data.name].group2.median
+                                y2 = 5
+                                strokeWidth = 1.5
+                                stroke = "blue"
+                            }
+                            Line.centered {
+                                x1 = tree.leave_box_dict[l.leaf.data.name].group2.min
+                                y1 = 0
+                                x2 = tree.leave_box_dict[l.leaf.data.name].group2.max
+                                y2 = 0
+                                strokeWidth = 1.5
+                                stroke = "blue"
+                            }
+                        }
+                    }
+                }  
+                :link(l){
+                    Component {
+                        @let isGroupLink = 0
+                        Container {
+                            @if(tree.library.matrix_dict[l.link.target.data.name].qvalue < tree.dataOpt.maxQvalue) {
+                                @if (tree.library.matrix_dict[l.link.target.data.name].enriched === tree.library.id_group.group1) {
+                                    @expr isGroupLink = 1
+                                } @elsif (tree.library.matrix_dict[l.link.target.data.name].enriched === tree.library.id_group.group2) {
+                                    @expr isGroupLink = 2
+                                }
+                            } 
+                        }
+                        @let isActive = l.tree.isActiveLink(l.link)
+                        Path {
+                            // @let temp =  $parent
+                            // on:click = console.log(l.tree.isLinkOnTop(l))
+                            stroke = isActive ? "black" : (isGroupLink ? (isGroupLink === 1) ? 
+                                "red" : "blue" : (tree.library.color_dict.depthPathNodes[l.link.source.data.name]) ? 
+                                    tree.library.color_dict.colorNodes[tree.library.color_dict.depthPathNodes[l.link.source.data.name]] : "#aaa")
+                            strokeWidth = isGroupLink ? 5 : (isActive ? 5 : 3)
+                            fill = "none"
+                            d = l.tree.getPath(...l.pos)
+                            @props isActive ? prop.opt.activeLink : prop.opt.link
+                        }
+                    }
+                }
+            }
+            Component {
+                x = (tree.dataOpt.showAllNodeName || tree.dataOpt.showDistinctNodeName) ? tree.dataOpt.level * 100 + tree.dataOpt.maxTextLength + 80 + tree.max_mean : tree.dataOpt.level * 100 + 50 + tree.max_mean
+                y = 20
+                width = tree.dataOpt.boxPlotLength
+                Text {
+                    text = "Relative Abundance"
+                }
+                Axis {
+                    x = 2.5
+                    y = 30
+                    orientation = "top"
+                    xScale = @scaleLog(Math.floor(tree.min), Math.ceil(tree.max), 0, tree.dataOpt.boxPlotLength)
+                }
+                Rect {
+                    x = 150
+                    y = -2.5
+                    width = 30
+                    height = 15
+                    fill = "none"
+                    stroke = "red"
+                }
+                Line.centered {
+                    x1 = 165
+                    y1 = -2.5
+                    x2 = 165
+                    y2 = 12.5
+                    stroke = "red"
+                }
+                Line.centered {
+                    x1 = 140
+                    y1 = 5
+                    x2 = 190
+                    y2 = 5
+                    stroke = "red"
+                }
+                Text {
+                    x = 200
+                    text = tree.library.id_group.group1
+                }
+                Rect {
+                    x = 300
+                    y = -2.5
+                    width = 30
+                    height = 15
+                    fill = "none"
+                    stroke = "blue"
+                }
+                Line.centered {
+                    x1 = 315
+                    y1 = -2.5
+                    x2 = 315
+                    y2 = 12.5
+                    stroke = "blue"
+                }
+                Line.centered {
+                    x1 = 290
+                    y1 = 5
+                    x2 = 340
+                    y2 = 5
+                    stroke = "blue"
+                }
+                Text {
+                    x = 350
+                    text = tree.library.id_group.group2
+                }
+            }
+            Component {
+                x =  (tree.dataOpt.showAllNodeName || tree.dataOpt.showDistinctNodeName) ? tree.dataOpt.level * 100 + tree.dataOpt.maxTextLength + 80 + tree.max_mean + tree.dataOpt.boxPlotLength + 30: tree.dataOpt.level * 100 + 50 + tree.max_mean + tree.dataOpt.boxPlotLength + 30
+                y = 20
+                Text {
+                    text = "Relative Abundance"
+                }
+                @for i in 6 {
+                    @let rad = tree.min_mean + (5 - i) * ((tree.max_mean - tree.min_mean) / 5)
+                    Circle.centered {
+                        x = 50
+                        y = (i + 1) * 50
+                        r = rad
+                    }
+                    Text.centered {
+                        x = 50 + tree.max_mean * 2
+                        y = (i + 1) * 50
+                        text = Math.ceil(rad) + "%"
+                    }
+                }
+            }
+        }
+    }
+}

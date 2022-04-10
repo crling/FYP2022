@@ -1,0 +1,171 @@
+svg {
+	height = 650
+	Component {
+		y = 45; x = 150; height = 400
+		width = rectW
+		
+	XYPlot {
+		height = 400
+		width = plotWidth
+		data = boxData
+		gap = 0
+		// valueRange = valueRange
+		valueRange = [-7, 2.5]
+		discreteCategory = true
+		Rect{
+			width = rectW
+			height = 100%
+			stroke = "#000"
+			fill = "none"
+		}
+		AxisBackground { 
+			orientation = "vertical"
+			dashArray = "1, 2"
+		}
+
+	Component.full {
+		clip = @clip("polygon", clipPath)
+		Component.full {
+			x = -state.rangeL
+			@for (item, index) in boxData{
+				Boxes {
+					key = index
+					static = true
+					@let i = index[index.length-1]
+					data = index
+					showMean = true
+					showNotch = false
+					x = i * boxW + 0.1 * gridW
+					:box (_d) {
+						Rect  {
+							stroke = "black"
+							strokeWidth = 1
+							fill = colors[i]
+							behavior:tooltip {
+								content = (`min: ${_d.data[0].toFixed(2)} <br>
+											first quartile: ${_d.data[1].toFixed(2)} <br>
+											median: ${_d.data[2].toFixed(2)} <br>
+											third quartile: ${_d.data[3].toFixed(2)} <br>
+											max: ${_d.data[4].toFixed(2)} <br>`)
+							}
+							width = boxW - 3
+							x = 1.5
+							height =100%
+						}
+					}
+					:whiskle (d) {
+						Line { x = boxW / 2; y1 = 0; y2 = 100%; 
+							stroke = "black"; strokeWidth = 1.5
+						}
+					}
+					:outlier{
+						@if config.showOutliers {
+							Circle.centered {
+								r = 2
+								x = - boxW / 2 - gridW * 0.1
+								stroke = colors[i]
+								fill = "white"
+								// stroke = "black"
+							}
+						}
+					}
+					:mean(means) {
+					}
+					:median(d) {
+						Line { x1 = 1.5; x2 = boxW - 1.5; stroke = "black"}
+					}
+				}
+			}
+			Axis("bottom") {
+				y = 100%;
+				:label(tick) {
+					Text(tick.value) {
+						@let tickX = @scaled-x(tick.value)
+						@let tickY = 5
+						y = 5; anchor = @anchor("r", "m")
+						rotation = @rotate(-xAxisRotation)
+						fontSize = config.fontSize
+						behavior:drag {
+							isSvg = true
+							direction = "polar"
+							origin = [tickX, tickY]
+							onDrag = @bind(adjustLabel)
+						}
+					}
+				}
+			}
+		}
+	}
+		Axis("left") {
+			static = true
+			label.fontSize = config.fontSize
+			includeEndTicks = false
+		}
+
+
+		Component {
+			static = true
+			x = -25; y = 50%
+			rotation = @rotate(-90)
+			Text(ylabel) { 
+				fontSize = config.fontSize
+				anchor = @anchor("bottom", "center")
+			}
+		}
+		Component{
+			static = true
+			x = 5%; y = 90%
+			@for (item, index) in classifications{
+				Line { key = index; x1 = 7.5; x2 = 7.5; y1 = 24 * index - 10; 
+					y2 = 24 * index + 10; stroke = "black" }
+				
+				Rect {
+					key = index
+					x = 0
+					y = index * 24
+					height = 10
+					width = 15
+					anchor = @anchor("middle","left")
+					stroke = "black"
+					fill = colors[index]
+				}
+				Line { key = [index, 1]; x1 = 0; x2 = 15; y1 = 24 * index; 
+					y2 = 24 * index; stroke = "black" }
+				Text{
+					x = 20
+					y = index * 24
+					key = index
+					anchor = @anchor("middle","left")
+					text = item
+					fill = "#000"
+					fontSize = config.fontSize
+				}
+			}
+		}
+	}
+	@if plotWidth > 850 {
+        Component {
+            y = 550;
+            Rect {
+				y = 8
+                height = 10
+				stroke = "#aaa"
+				strokeWidth = 0.5
+                width = 100%
+                fill = "#eee"
+            }
+            Brush {
+                ref = "brush"
+                range = [0, plotWidth]
+                initialRange = [0, 850]
+                height = 6
+				y = 10
+				brush.stroke = "none"
+				brush.fill = "#aaa"
+                brush.cornerRadius = 4
+                onBrushUpdate = @bind(updateRange)
+            }
+        }
+    }
+	}
+}

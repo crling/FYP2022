@@ -1,0 +1,14 @@
+- content_for :title do
+  | Create Public File API
+
+.container
+  ol.breadcrumb
+    li.breadcrumb-item = link_to 'Public File APis', admin_public_file_apis_path
+    li.breadcrumb-item.active New
+  .card
+    .card-body
+      h2.card-title
+        | Create Public File API
+      hr
+      = simple_form_for @api, url: admin_public_file_apis_path do |f|
+        = render 'form', f: f

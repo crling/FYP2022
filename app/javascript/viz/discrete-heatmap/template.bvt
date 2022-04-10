@@ -1,0 +1,24 @@
+svg {
+    height = 1600; width = 1000
+   Columns{
+       x = 100; y = 50
+       @for (data, i) in heatmapDataD {
+           DiscreteHeatMap {
+               x = 3
+               width = 25 * data.columns.length
+               drawRows = i === 0? true : false
+               data = data.data
+               colors = colors
+               valueMap = valueMap
+               values = values
+               gridW = 25
+               gridH = 15
+               colName = config.colName
+               rowName = config.rowName
+               columns = data.columns
+               rows = data.rows
+               colLabelRotaton = config.colLabelRotation
+           }
+       }
+   }
+}

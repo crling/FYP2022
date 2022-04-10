@@ -1,0 +1,19 @@
+id,sample_name,original_description,curated_description,project_name,run_id,second_run_id,meta_project_id,experiment_type,nr_reads_sequenced,instrument_model,disease_phenotype,is_disease_stage_available,disease_stage,more,more_info,country,collection_date,sex,host_age,diet,longitude,lattitude,BMI,associated_phenotype,QC_status,recent_antibiotics_use,antibiotics_used,antibiotics_dose,days_without_antibiotics_use,project_id,created_at,updated_at
+18,ERR475510,,,PRJEB6070,,,,Amplicon,695644,Illumina MiSeq,,,,,,France,,Male,64,,,,28.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+17,ERR475509,,,PRJEB6070,,,,Amplicon,836386,Illumina MiSeq,,,,,,France,,Male,79,,,,30.0,D015179,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+16,ERR475508,,,PRJEB6070,,,,Amplicon,1034746,Illumina MiSeq,,,,,,France,,Female,71,,,,23.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+15,ERR475507,,,PRJEB6070,,,,Amplicon,891454,Illumina MiSeq,,,,,,France,,Female,71,,,,22.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+14,ERR475506,,,PRJEB6070,,,,Amplicon,708115,Illumina MiSeq,,,,,,France,,Female,53,,,,33.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+13,ERR475505,,,PRJEB6070,,,,Amplicon,707319,Illumina MiSeq,,,,,,France,,Male,63,,,,26.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+12,ERR475504,,,PRJEB6070,,,,Amplicon,925929,Illumina MiSeq,,,,,,France,,Female,61,,,,23.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+11,ERR475503,,,PRJEB6070,,,,Amplicon,703194,Illumina MiSeq,,,,,,France,,Male,67,,,,27.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+10,ERR475502,,,PRJEB6070,,,,Amplicon,702839,Illumina MiSeq,,,,,,France,,Male,73,,,,26.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+9,ERR475501,,,PRJEB6070,,,,Amplicon,637951,Illumina MiSeq,,,,,,France,,Male,63,,,,22.0,D015179,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+8,ERR475500,,,PRJEB6070,,,,Amplicon,760950,Illumina MiSeq,,,,,,France,,Male,58,,,,24.0,D015179,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+7,ERR475499,,,PRJEB6070,,,,Amplicon,642104,Illumina MiSeq,,,,,,France,,Male,63,,,,25.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+6,ERR475498,,,PRJEB6070,,,,Amplicon,889879,Illumina MiSeq,,,,,,France,,Male,71,,,,29.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+5,ERR475497,,,PRJEB6070,,,,Amplicon,828967,Illumina MiSeq,,,,,,France,,Female,66,,,,28.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+4,ERR475496,,,PRJEB6070,,,,Amplicon,106328,Illumina MiSeq,,,,,,France,,Male,62,,,,29.0,D000236,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+3,ERR475495,,,PRJEB6070,,,,Amplicon,113483,Illumina MiSeq,,,,,,France,,Male,70,,,,25.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+2,ERR475494,,,PRJEB6070,,,,Amplicon,82000,Illumina MiSeq,,,,,,France,,Female,59,,,,25.0,D006262,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC
+1,ERR475493,,,PRJEB6070,,,,Amplicon,414692,Illumina MiSeq,,,,,,France,,Female,62,,,,21.0,D015179,1,,,,,1,2020-12-18 06:29:30 UTC,2020-12-18 06:29:30 UTC

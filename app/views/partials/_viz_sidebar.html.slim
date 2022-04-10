@@ -1,0 +1,8 @@
+- @analysis_categories.each do |c|
+    ul.list-unstyled.analysis
+        li.header.fold data-toggle="collapse" href="#sidebar-cl-#{c.id}"
+            = c.name
+        .collapse.show id="sidebar-cl-#{c.id}"
+            - c.analyses.each do |a|
+                li class=('active' if @analysis == a)
+                    = link_to a.name, analysis_path(a.url)

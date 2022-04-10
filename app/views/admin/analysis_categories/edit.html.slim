@@ -1,0 +1,18 @@
+- content_for :title
+  | Edit Analysis Category&nbsp;
+  = @analysis_category.name
+
+.container
+  ol.breadcrumb
+    li.breadcrumb-item
+      = link_to 'Analysis Categories', admin_analysis_categories_path
+    li.breadcrumb-item = @analysis_category.name
+    li.breadcrumb-item.active Edit
+  .card
+    .card-body
+      h2.card-title
+        | Edit Analysis Category&nbsp;
+        = @analysis_category.name
+      hr
+      = simple_form_for @analysis_category, url: admin_analysis_category_path(@analysis_category) do |f|
+        = render 'form', f: f

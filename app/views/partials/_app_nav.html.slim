@@ -1,0 +1,59 @@
+#topbar.nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top.topbar-app
+  .container-fluid.px-0
+    = link_to root_url, class: 'navbar-brand'
+      img.mr-2 src='/favicon-w.png' alt="DOAP" height='22'
+      span.font-weight-bold DOAP
+    button.navbar-toggler type="button" data-toggle="collapse" data-target=".dual-collapse2"
+      span.navbar-toggler-icon
+
+    .left
+      = yield :breadcrumb
+
+    .collapse.navbar-collapse.order-1.order-md-0.dual-collapse2
+      ul.navbar-nav.ml-auto
+        / We render the caret (down angle) by ourselves
+        - caret_icon = 'caret-down'
+        li.nav-item.dropdown
+          = link_to '#', class: 'nav-link dropdown-toggle', data: { toggle: 'dropdown' } do
+            | Apps
+            = icon 'fas', caret_icon
+          .dropdown-menu
+            = link_to pipelines_path, class: 'dropdown-item' do
+              = icon 'fas', 'network-wired'
+              | Pipelines
+            = link_to apps_path, class: 'dropdown-item' do
+              = icon 'fab', 'medium-m'
+              | Modules
+        li.nav-item.dropdown
+          = link_to '#', class: 'nav-link dropdown-toggle', data: { toggle: 'dropdown' } do
+            | Resources
+            = icon 'fas', caret_icon
+          .dropdown-menu
+            = link_to toolkits_path, class: 'dropdown-item' do
+              = icon 'fas', 'toolbox'
+              | Toolkits
+            = link_to public_references_path, class: 'dropdown-item' do
+              = icon 'fas', 'database'
+              | Public References
+        li.nav-item.dropdown
+          = link_to '#', class: 'nav-link dropdown-toggle', data: { toggle: 'dropdown' } do
+            | Support
+            = icon 'fas', caret_icon
+          .dropdown-menu
+            = link_to welcome_docs_path, class: 'dropdown-item' do
+              = icon 'fas', 'file'
+              | Docs
+            = link_to welcome_about_path, class: 'dropdown-item' do
+              = icon 'fas', 'user' 
+              | Team
+            = link_to welcome_contact_path, class: 'dropdown-item' do
+              = icon 'fas', 'address-book'
+              | Contact Us
+        li.nav-item
+          / = link_to edit_user_registration_path, class: 'nav-link' do
+          = link_to '#', class: 'nav-link' do
+            = icon 'fa', 'user-circle'
+            = current_user.username
+        li.nav-item
+          = link_to destroy_user_session_path, method: :delete, class: 'nav-link pr-0' do
+            = icon 'fa', 'sign-out-alt'
