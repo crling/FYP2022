@@ -1,0 +1,1 @@
+{"ast":null,"code":"//\n// Single point of contact for Vue\n//\n// TODO:\n//   Conditionally import Vue if no global Vue\n//\nimport Vue from 'vue';\nexport default Vue;","map":null,"metadata":{},"sourceType":"module"}

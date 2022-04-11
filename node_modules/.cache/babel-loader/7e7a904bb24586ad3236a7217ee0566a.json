@@ -1,0 +1,1 @@
+{"ast":null,"code":"var noop = function noop() {};\n\nexport default noop;","map":null,"metadata":{},"sourceType":"module"}

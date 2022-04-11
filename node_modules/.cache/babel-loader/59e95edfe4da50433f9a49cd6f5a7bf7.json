@@ -1,0 +1,1 @@
+{"ast":null,"code":"/**\n * @param {number} length\n * @return {Array}\n */\nvar range = function range(length) {\n  return Array.apply(null, {\n    length: length\n  });\n};\n\nexport default range;","map":null,"metadata":{},"sourceType":"module"}

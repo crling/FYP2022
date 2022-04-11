@@ -1,0 +1,1 @@
+{"ast":null,"code":"// @vue/component\nexport default {\n  props: {\n    plain: {\n      type: Boolean,\n      \"default\": false\n    }\n  },\n  computed: {\n    custom: function custom() {\n      return !this.plain;\n    }\n  }\n};","map":null,"metadata":{},"sourceType":"module"}
